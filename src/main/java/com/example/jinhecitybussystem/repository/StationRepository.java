@@ -3,6 +3,7 @@ package com.example.jinhecitybussystem.repository;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import java.util.List;
 
+import org.neo4j.driver.internal.value.ListValue;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,4 +24,10 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
 
   @Query("MATCH (n:Station) RETURN n ORDER BY n.english")
   List<Station> findAllStations();
+
+  @Query("MATCH p=(start:Station{name:$stationName})-[r:next{line:$lineName}]->(end:Station) RETURN r.start")
+  List<ListValue> findTimetableByLineAndStartStations(@Param(value = "lineName") String lineName, @Param(value = "stationName")String stationName);
+
+  @Query("MATCH p=(start:Station)-[r:next{line:$lineName}]->(end:Station{name:$stationName}) RETURN r.end")
+  List<ListValue> findTimetableByLineAndEndStations(@Param(value = "lineName") String lineName, @Param(value = "stationName")String stationName);
 }

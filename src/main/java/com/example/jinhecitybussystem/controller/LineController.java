@@ -26,7 +26,7 @@ public class LineController {
 
   @ResponseBody
   @GetMapping("/line/getLinesByStationName")
-  public Map<Station, List<Line>> getLinesByStationName(@RequestParam("stationName") String stationName) {
+  public Map<Station, List<String>> getLinesByStationName(@RequestParam("stationName") String stationName) {
     return lineService.findLinesByStationName(stationName);
   }
 }

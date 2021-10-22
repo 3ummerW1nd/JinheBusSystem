@@ -1,3 +1,7 @@
 package com.example.jinhecitybussystem.service;
 
-public interface RouteService {}
+import com.example.jinhecitybussystem.entity.VO.RouteVO;
+
+public interface RouteService {
+    public RouteVO findRouteByLineAndStation(String line, String start, String end);
+}

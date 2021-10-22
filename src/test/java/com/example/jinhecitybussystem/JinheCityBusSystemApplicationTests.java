@@ -7,6 +7,7 @@ import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.entity.jsonEntity.TimeTable;
 import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
+import com.example.jinhecitybussystem.service.RouteService;
 import com.example.jinhecitybussystem.util.FileUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +25,8 @@ class JinheCityBusSystemApplicationTests {
     StationRepository stationRepository;
     @Autowired
     LineRepository lineRepository;
+    @Autowired
+    RouteService routeService;
 
     @Test
     void saveAllStation() {
@@ -81,5 +84,13 @@ class JinheCityBusSystemApplicationTests {
             }
         }
     }
+    @Test
+    void getTimetable() {
+        System.out.println(stationRepository.findTimetableByLineAndStartStations("10路上行", "大悦城"));
+    }
 
+    @Test
+    void getAnswer() {
+        System.out.println(routeService.findRouteByLineAndStation("10", "大悦城", "小吃街"));
+    }
 }
