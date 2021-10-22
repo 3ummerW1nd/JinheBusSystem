@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RouteServiceImpl implements RouteService {
@@ -79,5 +80,23 @@ public class RouteServiceImpl implements RouteService {
         int time = TimeUtil.calculateTime(startTimeString, endTimeString);
         answer.setTime(time);
         return answer;
+    }
+
+    @Override
+    public boolean isDirect(String start, String end) {
+        Map<Station, List<String>> map = lineService.findLinesByStationName(start);
+        List<String> lineNames = new ArrayList<>();
+        for (Map.Entry<Station, List<String>> entry : map.entrySet()) {
+            lineNames.addAll(entry.getValue());
+        }
+        for(String lineName : lineNames) {
+            List<Station> route = stationRepository.findRouteStationsByLineName(lineName);
+            for(Station station : route) {
+                if(station.getName().equals(end)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

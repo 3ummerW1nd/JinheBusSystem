@@ -20,8 +20,14 @@ public class RouteController {
 
     @ResponseBody
     @GetMapping("/route/getRouteByLine")
-    public RouteVO getLine(@RequestParam("line") String line, @RequestParam("start") String start, @RequestParam("end") String end) {
+    public RouteVO getRouteByLine(@RequestParam("line") String line, @RequestParam("start") String start, @RequestParam("end") String end) {
         return routeService.findRouteByLineAndStation(line, start, end);
+    }
+
+    @ResponseBody
+    @GetMapping("/route/direct")
+    public boolean isDirect(@RequestParam("start") String start, @RequestParam("end") String end) {
+        return routeService.isDirect(start, end);
     }
 
 }
