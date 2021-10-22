@@ -1,4 +1,4 @@
-package com.example.jinhecitybussystem.entity;
+package com.example.jinhecitybussystem.entity.jsonEntity;
 
 import lombok.Builder;
 import lombok.Data;

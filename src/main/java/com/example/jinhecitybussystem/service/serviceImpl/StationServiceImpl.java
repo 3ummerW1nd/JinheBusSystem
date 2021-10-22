@@ -1,7 +1,7 @@
 package com.example.jinhecitybussystem.service.serviceImpl;
 
-import com.example.jinhecitybussystem.entity.Line;
-import com.example.jinhecitybussystem.entity.Station;
+import com.example.jinhecitybussystem.entity.jsonEntity.Line;
+import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.repository.StationRepository;
 import com.example.jinhecitybussystem.service.StationService;
 import java.util.ArrayList;

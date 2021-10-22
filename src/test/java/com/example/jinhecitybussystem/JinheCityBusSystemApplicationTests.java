@@ -1,10 +1,12 @@
 package com.example.jinhecitybussystem;
 
 import com.alibaba.fastjson.JSON;
-import com.example.jinhecitybussystem.entity.*;
+import com.example.jinhecitybussystem.entity.jsonEntity.Line;
+import com.example.jinhecitybussystem.entity.jsonEntity.Route;
+import com.example.jinhecitybussystem.entity.jsonEntity.Station;
+import com.example.jinhecitybussystem.entity.jsonEntity.TimeTable;
 import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
-import com.example.jinhecitybussystem.repository.TimeTableRepository;
 import com.example.jinhecitybussystem.util.FileUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -21,8 +24,6 @@ class JinheCityBusSystemApplicationTests {
     StationRepository stationRepository;
     @Autowired
     LineRepository lineRepository;
-    @Autowired
-    TimeTableRepository timeTableRepository;
 
     @Test
     void saveAllStation() {
@@ -47,13 +48,38 @@ class JinheCityBusSystemApplicationTests {
     @Test
     void saveAllRoute() {
         String filePath = "src/main/resources/data/routes.json";
-        String jsonContent = FileUtil.ReadFile(filePath);
-        List<Route> list = JSON.parseArray(jsonContent,Route.class);
-        for(Route it : list) {
-            long[] stations = it.getAlongStation();
-            for(int i = 0; i < stations.length - 1; i ++) {
-                stationRepository.buildRoute(it.getName(), stations[i], stations[i + 1]);
+        String routeJsonContent = FileUtil.ReadFile(filePath);
+        List<Route> routeList = JSON.parseArray(routeJsonContent,Route.class);
+        filePath = "src/main/resources/data/timetables.json";
+        String timeTableJsonContent = FileUtil.ReadFile(filePath);
+        List<TimeTable> timetableList = JSON.parseArray(timeTableJsonContent,TimeTable.class);
+        for(int i = 0; i < routeList.size(); i ++) {
+            long[] stations = routeList.get(i).getAlongStation();
+            List<List<String>> timetables = timetableList.get(i).getTimetable();
+            String name = routeList.get(i).getName();
+            for(int j = 0; j < stations.length - 1; j ++) {
+                List<String> start = new ArrayList<>();
+                List<String> end = new ArrayList<>();
+                for(int k = 0; k < timetables.size(); k ++) {
+                    start.add(timetables.get(k).get(j));
+                    end.add(timetables.get(k).get(j + 1));
+                }
+                stationRepository.buildRoute(name, stations[j], stations[j + 1], start, end);
             }
         }
     }
+
+    @Test
+    void saveAllTime() {
+        String filePath = "src/main/resources/data/timetables.json";
+        String jsonContent = FileUtil.ReadFile(filePath);
+        List<TimeTable> list = JSON.parseArray(jsonContent,TimeTable.class);
+        System.out.println(list.size());
+        for(TimeTable it : list) {
+            for(List<String> l : it.getTimetable()) {
+
+            }
+        }
+    }
+
 }

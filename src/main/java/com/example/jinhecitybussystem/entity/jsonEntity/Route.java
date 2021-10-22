@@ -1,6 +1,5 @@
-package com.example.jinhecitybussystem.entity;
+package com.example.jinhecitybussystem.entity.jsonEntity;
 
-import lombok.Builder;
 import lombok.Data;
 import org.neo4j.ogm.annotation.NodeEntity;
 
@@ -20,9 +19,5 @@ public class Route {
 
   public long[] getAlongStation() {
     return alongStation;
-  }
-
-  public void setAlongStation(long[] alongStation) {
-    this.alongStation = alongStation;
   }
 }

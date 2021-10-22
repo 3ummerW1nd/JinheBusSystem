@@ -1,7 +1,7 @@
 package com.example.jinhecitybussystem.controller;
 
-import com.example.jinhecitybussystem.entity.Line;
-import com.example.jinhecitybussystem.entity.Station;
+import com.example.jinhecitybussystem.entity.jsonEntity.Line;
+import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.service.StationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
