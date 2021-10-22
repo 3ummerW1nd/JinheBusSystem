@@ -75,7 +75,7 @@ public class RouteServiceImpl implements RouteService {
         List<Station> answerRoute = answer.getStations();
         int cnt = answerRoute.size();
         String startTimeString = stationRepository.findTimetableByLineAndStartStations(answer.getName(), answerRoute.get(0).getName()).get(0).get(0).toString().substring(1,6);
-        String endTimeString = stationRepository.findTimetableByLineAndStartStations(answer.getName(), answerRoute.get(cnt - 1).getName()).get(0).get(0).toString().substring(1,6);
+        String endTimeString = stationRepository.findTimetableByLineAndEndStations(answer.getName(), answerRoute.get(cnt - 1).getName()).get(0).get(0).toString().substring(1,6);
         int time = TimeUtil.calculateTime(startTimeString, endTimeString);
         answer.setTime(time);
         return answer;
