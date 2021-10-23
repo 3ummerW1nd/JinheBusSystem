@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Set;
+
 @Controller
 public class RouteController {
   private RouteService routeService;
@@ -29,5 +31,11 @@ public class RouteController {
   @GetMapping("/route/direct")
   public boolean isDirect(@RequestParam("start") String start, @RequestParam("end") String end) {
     return routeService.isDirect(start, end);
+  }
+
+  @ResponseBody
+  @GetMapping("/route/getTransferLines")
+  public Set<String> getTransferLines(@RequestParam("route") String routeName) {
+    return routeService.findTransferRoutes(routeName);
   }
 }

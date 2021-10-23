@@ -3,14 +3,15 @@ package com.example.jinhecitybussystem.service.serviceImpl;
 import com.example.jinhecitybussystem.entity.VO.RouteVO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
+import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
 import com.example.jinhecitybussystem.service.LineService;
 import com.example.jinhecitybussystem.service.RouteService;
 import com.example.jinhecitybussystem.service.StationService;
 import com.example.jinhecitybussystem.util.TimeUtil;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ public class RouteServiceImpl implements RouteService {
   private LineService lineService;
 
   private StationRepository stationRepository;
+
+  private LineRepository lineRepository;
 
   @Autowired
   public void setStationService(StationService stationService) {
@@ -35,6 +38,11 @@ public class RouteServiceImpl implements RouteService {
   @Autowired
   public void setStationRepository(StationRepository stationRepository) {
     this.stationRepository = stationRepository;
+  }
+
+  @Autowired
+  public void setLineRepository(LineRepository lineRepository) {
+    this.lineRepository = lineRepository;
   }
 
   @Override
@@ -121,5 +129,16 @@ public class RouteServiceImpl implements RouteService {
       }
     }
     return false;
+  }
+
+  @Override
+  public Set<String> findTransferRoutes(String routeName) {
+    Set<String> answer = new HashSet<>();
+    List<Station> route = stationRepository.findRouteStationsByLineName(routeName);
+    for(int i = 0; i < route.size() - 1; i ++) {
+      answer.addAll(lineRepository.findRoutesByStationNames(route.get(i).getId(), route.get(i + 1).getId()));
+    }
+    answer.remove(routeName);
+    return answer;
   }
 }
