@@ -14,7 +14,14 @@ import java.util.List;
 
 @Controller
 public class StationController {
-    @Autowired StationService stationService;
+    private StationService stationService;
+    @Autowired
+    public void setStationService(StationService stationService) {
+        this.stationService = stationService;
+    }
+
+
+
 
     @ResponseBody
     @PostMapping("/station/getRouteStations")

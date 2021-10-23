@@ -18,13 +18,26 @@ import java.util.Map;
 @Service
 public class RouteServiceImpl implements RouteService {
 
-    @Autowired
-    StationService stationService;
+    private StationService stationService;
+
+    private LineService lineService;
+
+    private StationRepository stationRepository;
 
     @Autowired
-    LineService lineService;
+    public void setStationService(StationService stationService) {
+        this.stationService = stationService;
+    }
+
     @Autowired
-    StationRepository stationRepository;
+    public void setLineService(LineService lineService) {
+        this.lineService = lineService;
+    }
+
+    @Autowired
+    public void setStationRepository(StationRepository stationRepository) {
+        this.stationRepository = stationRepository;
+    }
 
     @Override
     public RouteVO findRouteByLineAndStation(String lineName, String start, String end) {

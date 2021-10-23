@@ -10,12 +10,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.jinhecitybussystem.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 @Service
 public class LineServiceImpl implements LineService {
-  @Autowired LineRepository lineRepository;
-  @Autowired StationRepository stationRepository;
+  private LineRepository lineRepository;
+  private StationRepository stationRepository;
+  @Autowired
+  public void setLineRepository(LineRepository lineRepository) {
+    this.lineRepository = lineRepository;
+  }
+  @Autowired
+  public void setStationRepository(StationRepository stationRepository) {
+    this.stationRepository = stationRepository;
+  }
+
   private final static String REGEX_CHINESE = "[\u4e00-\u9fa5]";// 中文正则
   @Override
   public Line findLineByName(String name) {

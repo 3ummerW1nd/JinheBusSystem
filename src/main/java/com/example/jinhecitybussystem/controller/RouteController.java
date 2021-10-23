@@ -14,7 +14,7 @@ public class RouteController {
     private RouteService routeService;
 
     @Autowired
-    public void setInjectedBean(RouteService routeService) {
+    public void setRouteService(RouteService routeService) {
         this.routeService = routeService;
     }
 

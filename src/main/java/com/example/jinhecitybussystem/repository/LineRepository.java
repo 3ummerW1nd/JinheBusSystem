@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface LineRepository extends Neo4jRepository<Line, Long> {
   Line findByName(String name);
-  @Query("MATCH (s:Station)-[r:next]->() WHERE s.id = $stationId  RETURN r.line")
+  @Query("MATCH (s:Station)-[r:next]->(ss:Station) WHERE s.id = $stationId OR ss.id = $stationId  RETURN DISTINCT r.line")
   List<String> findLineNameByStationId(@Param(value = "stationId")long stationId);
 }

@@ -11,7 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class StationServiceImpl implements StationService {
-  @Autowired StationRepository stationRepository;
+  private StationRepository stationRepository;
+
+  @Autowired
+  public void setStationRepository(StationRepository stationRepository) {
+    this.stationRepository = stationRepository;
+  }
 
   @Override
   public List<List<Station>> findStationsByLine(Line line) {

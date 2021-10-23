@@ -16,7 +16,11 @@ import java.util.Map;
 @Api
 @Controller
 public class LineController {
-  @Autowired LineService lineService;
+  private LineService lineService;
+  @Autowired
+  public void setLineService(LineService lineService) {
+    this.lineService = lineService;
+  }
 
   @ResponseBody
   @GetMapping("/line/getLine")
