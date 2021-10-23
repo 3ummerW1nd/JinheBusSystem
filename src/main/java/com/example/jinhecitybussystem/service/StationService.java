@@ -10,4 +10,5 @@ public interface StationService {
   List<Station> findAllStations();
   List<Map.Entry<Station, Integer>> findStationsWithMostOrLeastLines();
   List<Integer> findSpecialStationsCount();
+  List<String> findSameStationsByLineNames(String lineName1, String lineName2);
 }

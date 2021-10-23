@@ -8,10 +8,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class StationController {
@@ -45,4 +42,11 @@ public class StationController {
   public List<Integer> getSpecialStationsCount() {
     return stationService.findSpecialStationsCount();
   }
+
+  @ResponseBody
+  @GetMapping("/station/getSameStations")
+  public List<String> getSameStation(@RequestParam("lineName1") String lineName1, @RequestParam("lineName2") String lineName2) {
+    return stationService.findSameStationsByLineNames(lineName1, lineName2);
+  }
+
 }

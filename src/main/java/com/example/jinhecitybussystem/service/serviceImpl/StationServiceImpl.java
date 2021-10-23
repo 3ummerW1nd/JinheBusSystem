@@ -108,4 +108,30 @@ public class StationServiceImpl implements StationService {
     answer.add(singleStation.size());
     return answer;
   }
+
+  @Override
+  public List<String> findSameStationsByLineNames(String lineName1, String lineName2) {
+    List<String> answer = new ArrayList<>();
+    Line line1 = lineRepository.findByName(lineName1);
+    Line line2 = lineRepository.findByName(lineName2);
+    List<List<Station>> line1Stations = findStationsByLine(line1);
+    List<List<Station>> line2Stations = findStationsByLine(line2);
+    for(List<Station> list1 : line1Stations) {
+      for(Station line1Station : list1) {
+        for(List<Station> list2 : line2Stations) {
+          for(Station line2Station : list2) {
+            if(line1Station.getName().equals(line2Station.getName())) {
+              answer.add(line1Station.getName());
+            }
+          }
+        }
+      }
+    }
+    Set<String> tmp = new HashSet<>(answer);
+    answer.clear();
+    for(String s : tmp) {
+      answer.add(s);
+    }
+    return answer;
+  }
 }
