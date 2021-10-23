@@ -53,12 +53,7 @@ public class StationServiceImpl implements StationService {
     for (Station station : allStations) {
       list.add(Map.entry(station, lineRepository.findLineCountByStationId(station.getId())));
     }
-    Collections.sort(list, new Comparator<Map.Entry<Station, Integer>>() {
-      @Override
-      public int compare(Map.Entry<Station, Integer> o1, Map.Entry<Station, Integer> o2) {
-        return o1.getValue().compareTo(o2.getValue());
-      }
-    });
+    list.sort(Comparator.comparing(Map.Entry::getValue));
     for (int i = 0; i < 15; i++) {
       answer.add(list.get(i));
     }

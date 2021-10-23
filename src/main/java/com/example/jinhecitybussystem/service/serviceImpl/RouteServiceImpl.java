@@ -141,4 +141,24 @@ public class RouteServiceImpl implements RouteService {
     answer.remove(routeName);
     return answer;
   }
+
+  @Override
+  public List<Map.Entry<String, Integer>> findMostTransferRoutes() {
+    List<Line> allLines = lineRepository.findAll();
+    List<String> allRoute = new ArrayList<>();
+    for(Line line : allLines) {
+      if(line.isDirectional()) {
+        allRoute.add(line.getName() + "路上行");
+        allRoute.add(line.getName() + "路下行");
+      } else {
+        allRoute.add(line.getName() + "路");
+      }
+    }
+    List<Map.Entry<String, Integer>> answer = new ArrayList<>();
+    for(String route : allRoute) {
+      answer.add(Map.entry(route, findTransferRoutes(route).size()));
+    }
+    answer.sort((a,b)->b.getValue().compareTo(a.getValue()));
+    return answer.subList(0, 15);
+  }
 }

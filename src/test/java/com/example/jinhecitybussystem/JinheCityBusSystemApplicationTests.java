@@ -100,4 +100,10 @@ class JinheCityBusSystemApplicationTests {
   void getSpecialStationsCount() {
     System.out.println(stationService.findSpecialStationsCount());
   }
+
+  @Test
+  void getMostTransferRoutes() {
+    System.out.println(routeService.findMostTransferRoutes());
+  }
+
 }
