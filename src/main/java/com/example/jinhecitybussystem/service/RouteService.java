@@ -12,5 +12,6 @@ public interface RouteService {
   Set<String> findTransferRoutes(String routeName);
   List<Map.Entry<String, Integer>> findMostTransferRoutes();
   List<Map.Entry<String, Integer>> findMostStationsRoutes();
+  List<Map.Entry<String, Integer>> findLongestRunTimeRoutes();
   List<String> findAllRoutes();
 }

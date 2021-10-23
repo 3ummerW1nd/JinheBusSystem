@@ -12,7 +12,6 @@ import com.example.jinhecitybussystem.util.TimeUtil;
 
 import java.util.*;
 
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +24,8 @@ public class RouteServiceImpl implements RouteService {
   private StationRepository stationRepository;
 
   private LineRepository lineRepository;
+
+  private final static String REGEX_CHINESE = "[\u4e00-\u9fa5]";
 
   @Autowired
   public void setStationService(StationService stationService) {
@@ -163,7 +164,42 @@ public class RouteServiceImpl implements RouteService {
       answer.add(Map.entry(route, cnt));
     }
     answer.sort((a, b)->b.getValue().compareTo(a.getValue()));
-    return answer.subList(0, 15);
+    List<Map.Entry<String, Integer>> limitedAnswer = new ArrayList<>();
+    for(int i = 0; i < 15; i ++) {
+      limitedAnswer.add(answer.get(i));
+    }
+    for(int i = answer.size() - 1; i >= answer.size() - 15; i --) {
+      limitedAnswer.add(answer.get(i));
+    }
+    return limitedAnswer;
+  }
+
+  @Override
+  public List<Map.Entry<String, Integer>> findLongestRunTimeRoutes() {
+    List<Map.Entry<String, Integer>> answer = new ArrayList<>();
+    List<Map.Entry<String, Integer>> limitedAnswer = new ArrayList<>();
+    List<String> routes = findAllRoutes();
+    for(String route : routes) {
+      List<Station> stations = stationRepository.findRouteStationsByLineName(route);
+      String startTime = stationRepository.findTimetableByLineAndStartStations(route, stations.get(0).getName()).get(0)
+              .get(0)
+              .toString()
+              .substring(1, 6);
+      String endTime = stationRepository.findTimetableByLineAndEndStations(route, stations.get(stations.size() - 1).getName()).get(0)
+              .get(0)
+              .toString()
+              .substring(1, 6);
+      int time = TimeUtil.calculateTime(startTime, endTime);
+      answer.add(Map.entry(route, time));
+    }
+    answer.sort((a, b)->b.getValue().compareTo(a.getValue()));
+    for(int i = 0; i < 15; i ++) {
+      limitedAnswer.add(answer.get(i));
+    }
+    for(int i = answer.size() - 1; i >= answer.size() - 15; i --) {
+      limitedAnswer.add(answer.get(i));
+    }
+    return limitedAnswer;
   }
 
   @Override

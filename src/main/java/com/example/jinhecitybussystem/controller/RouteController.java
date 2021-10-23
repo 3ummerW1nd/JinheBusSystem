@@ -53,4 +53,10 @@ public class RouteController {
     return routeService.findMostStationsRoutes();
   }
 
+  @ResponseBody
+  @GetMapping("/route/getLongestRunTimeRoutes")
+  public List<Map.Entry<String, Integer>> getLongestRunTimeRoutes() {
+    return routeService.findLongestRunTimeRoutes();
+  }
+
 }
