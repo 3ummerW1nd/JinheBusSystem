@@ -11,23 +11,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class RouteController {
-    private RouteService routeService;
+  private RouteService routeService;
 
-    @Autowired
-    public void setRouteService(RouteService routeService) {
-        this.routeService = routeService;
-    }
+  @Autowired
+  public void setRouteService(RouteService routeService) {
+    this.routeService = routeService;
+  }
 
-    @ResponseBody
-    @GetMapping("/route/getRouteByLine")
-    public RouteVO getRouteByLine(@RequestParam("line") String line, @RequestParam("start") String start, @RequestParam("end") String end) {
-        return routeService.findRouteByLineAndStation(line, start, end);
-    }
+  @ResponseBody
+  @GetMapping("/route/getRouteByLine")
+  public RouteVO getRouteByLine(@RequestParam("line") String line,
+      @RequestParam("start") String start, @RequestParam("end") String end) {
+    return routeService.findRouteByLineAndStation(line, start, end);
+  }
 
-    @ResponseBody
-    @GetMapping("/route/direct")
-    public boolean isDirect(@RequestParam("start") String start, @RequestParam("end") String end) {
-        return routeService.isDirect(start, end);
-    }
-
+  @ResponseBody
+  @GetMapping("/route/direct")
+  public boolean isDirect(@RequestParam("start") String start, @RequestParam("end") String end) {
+    return routeService.isDirect(start, end);
+  }
 }

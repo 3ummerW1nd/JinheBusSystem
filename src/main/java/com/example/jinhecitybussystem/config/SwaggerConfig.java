@@ -14,32 +14,29 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+  @Bean
+  public Docket createRestApi() {
+    return new Docket(DocumentationType.SWAGGER_2)
+        // apiInfo指定测试文档基本信息，这部分将在页面展示
+        .apiInfo(apiInfo())
+        .select()
+        // apis() 控制哪些接口暴露给swagger，
+        // RequestHandlerSelectors.any() 所有都暴露
+        // RequestHandlerSelectors.basePackage("com.info.*")  指定包位置
+        .apis(RequestHandlerSelectors.any())
+        .paths(PathSelectors.any())
+        .build();
+  }
 
-    @Bean
-    public Docket createRestApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                //apiInfo指定测试文档基本信息，这部分将在页面展示
-                .apiInfo(apiInfo())
-                .select()
-                //apis() 控制哪些接口暴露给swagger，
-                // RequestHandlerSelectors.any() 所有都暴露
-                // RequestHandlerSelectors.basePackage("com.info.*")  指定包位置
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build();
-    }
-
-    //基本信息，页面展示
-    private ApiInfo apiInfo() {
-        return new ApiInfoBuilder()
-                .title("金河市公交线路系统")
-                .description("接口描述")
-                //联系人实体类
-                .contact(
-                        new Contact("", "localhost:8080", "sun_0901@foxmail.com")
-                )
-                //版本号
-                .version("1.0.0")
-                .build();
-    }
+  //基本信息，页面展示
+  private ApiInfo apiInfo() {
+    return new ApiInfoBuilder()
+        .title("金河市公交线路系统")
+        .description("接口描述")
+        //联系人实体类
+        .contact(new Contact("", "localhost:8080", "sun_0901@foxmail.com"))
+        //版本号
+        .version("1.0.0")
+        .build();
+  }
 }
