@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -38,4 +40,11 @@ public class RouteController {
   public Set<String> getTransferLines(@RequestParam("route") String routeName) {
     return routeService.findTransferRoutes(routeName);
   }
+
+  @ResponseBody
+  @GetMapping("/route/getMostTransferRoutes")
+  public List<Map.Entry<String, Integer>> getMostTransferRoutes() {
+    return routeService.findMostTransferRoutes();
+  }
+
 }
