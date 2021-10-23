@@ -47,4 +47,10 @@ public class RouteController {
     return routeService.findMostTransferRoutes();
   }
 
+  @ResponseBody
+  @GetMapping("/route/getMostStationsRoutes")
+  public List<Map.Entry<String, Integer>> getMostStationsRoutes() {
+    return routeService.findMostStationsRoutes();
+  }
+
 }

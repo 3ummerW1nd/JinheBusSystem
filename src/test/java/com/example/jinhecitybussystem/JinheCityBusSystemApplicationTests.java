@@ -106,4 +106,9 @@ class JinheCityBusSystemApplicationTests {
     System.out.println(routeService.findMostTransferRoutes());
   }
 
+  @Test
+  void getMostRouteStationPairs() {
+    System.out.println(stationService.findMostRouteStationPairs());
+  }
+
 }

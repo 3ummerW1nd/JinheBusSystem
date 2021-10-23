@@ -12,6 +12,7 @@ import com.example.jinhecitybussystem.util.TimeUtil;
 
 import java.util.*;
 
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -136,7 +137,7 @@ public class RouteServiceImpl implements RouteService {
     Set<String> answer = new HashSet<>();
     List<Station> route = stationRepository.findRouteStationsByLineName(routeName);
     for(int i = 0; i < route.size() - 1; i ++) {
-      answer.addAll(lineRepository.findRoutesByStationNames(route.get(i).getId(), route.get(i + 1).getId()));
+      answer.addAll(lineRepository.findRoutesByStationIds(route.get(i).getId(), route.get(i + 1).getId()));
     }
     answer.remove(routeName);
     return answer;
@@ -144,6 +145,29 @@ public class RouteServiceImpl implements RouteService {
 
   @Override
   public List<Map.Entry<String, Integer>> findMostTransferRoutes() {
+    List<String> allRoute = findAllRoutes();
+    List<Map.Entry<String, Integer>> answer = new ArrayList<>();
+    for(String route : allRoute) {
+      answer.add(Map.entry(route, findTransferRoutes(route).size()));
+    }
+    answer.sort((a,b)->b.getValue().compareTo(a.getValue()));
+    return answer.subList(0, 15);
+  }
+
+  @Override
+  public List<Map.Entry<String, Integer>> findMostStationsRoutes() {
+    List<Map.Entry<String, Integer>> answer = new ArrayList<>();
+    List<String> allRoute = findAllRoutes();
+    for(String route : allRoute) {
+      int cnt = stationRepository.findRouteStationsByLineName(route).size();
+      answer.add(Map.entry(route, cnt));
+    }
+    answer.sort((a, b)->b.getValue().compareTo(a.getValue()));
+    return answer.subList(0, 15);
+  }
+
+  @Override
+  public List<String> findAllRoutes() {
     List<Line> allLines = lineRepository.findAll();
     List<String> allRoute = new ArrayList<>();
     for(Line line : allLines) {
@@ -154,11 +178,6 @@ public class RouteServiceImpl implements RouteService {
         allRoute.add(line.getName() + "路");
       }
     }
-    List<Map.Entry<String, Integer>> answer = new ArrayList<>();
-    for(String route : allRoute) {
-      answer.add(Map.entry(route, findTransferRoutes(route).size()));
-    }
-    answer.sort((a,b)->b.getValue().compareTo(a.getValue()));
-    return answer.subList(0, 15);
+    return allRoute;
   }
 }
