@@ -5,7 +5,6 @@ import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.service.StationService;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -45,8 +44,8 @@ public class StationController {
 
   @ResponseBody
   @GetMapping("/station/getSameStations")
-  public List<String> getSameStation(@RequestParam("lineName1") String lineName1, @RequestParam("lineName2") String lineName2) {
+  public List<String> getSameStation(
+      @RequestParam("lineName1") String lineName1, @RequestParam("lineName2") String lineName2) {
     return stationService.findSameStationsByLineNames(lineName1, lineName2);
   }
-
 }

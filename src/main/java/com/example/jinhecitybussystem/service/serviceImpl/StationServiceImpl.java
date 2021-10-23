@@ -5,9 +5,7 @@ import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
 import com.example.jinhecitybussystem.service.StationService;
-
 import java.util.*;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,19 +50,19 @@ public class StationServiceImpl implements StationService {
     List<Map.Entry<Station, Integer>> answer = new ArrayList<>();
     List<Map.Entry<Station, Integer>> list = new ArrayList<>();
     List<Station> allStations = findAllStations();
-    for(Station station : allStations) {
+    for (Station station : allStations) {
       list.add(Map.entry(station, lineRepository.findLineCountByStationId(station.getId())));
     }
-    Collections.sort(list,new Comparator<Map.Entry<Station,Integer>>() {
+    Collections.sort(list, new Comparator<Map.Entry<Station, Integer>>() {
       @Override
       public int compare(Map.Entry<Station, Integer> o1, Map.Entry<Station, Integer> o2) {
         return o1.getValue().compareTo(o2.getValue());
       }
     });
-    for(int i = 0; i < 15; i ++) {
+    for (int i = 0; i < 15; i++) {
       answer.add(list.get(i));
     }
-    for(int i = list.size() - 1; i >= list.size() - 16; i --) {
+    for (int i = list.size() - 1; i >= list.size() - 16; i--) {
       answer.add(list.get(i));
     }
     return answer;
@@ -78,18 +76,18 @@ public class StationServiceImpl implements StationService {
     answer.add(stationRepository.findTerminalStationCount());
     List<Line> allLines = lineRepository.findAll();
     Set<String> singleStation = new HashSet<>();
-    for(Line line : allLines) {
+    for (Line line : allLines) {
       List<List<Station>> routes = findStationsByLine(line);
-      if(routes.size() == 2) {
+      if (routes.size() == 2) {
         Set<String> upRouteSet = new HashSet<>();
         Set<String> downRouteSet = new HashSet<>();
         Set<String> tmp = new HashSet<>();
         List<Station> upRoute = routes.get(0);
         List<Station> downRoute = routes.get(1);
-        for(Station station : upRoute) {
+        for (Station station : upRoute) {
           upRouteSet.add(station.getName());
         }
-        for(Station station : downRoute) {
+        for (Station station : downRoute) {
           downRouteSet.add(station.getName());
         }
         tmp.addAll(upRouteSet);
@@ -102,9 +100,9 @@ public class StationServiceImpl implements StationService {
         tmp.clear();
       }
     }
-//    for(String s : singleStation) {
-//      System.out.println(s);
-//    }
+    //    for(String s : singleStation) {
+    //      System.out.println(s);
+    //    }
     answer.add(singleStation.size());
     return answer;
   }
@@ -116,11 +114,11 @@ public class StationServiceImpl implements StationService {
     Line line2 = lineRepository.findByName(lineName2);
     List<List<Station>> line1Stations = findStationsByLine(line1);
     List<List<Station>> line2Stations = findStationsByLine(line2);
-    for(List<Station> list1 : line1Stations) {
-      for(Station line1Station : list1) {
-        for(List<Station> list2 : line2Stations) {
-          for(Station line2Station : list2) {
-            if(line1Station.getName().equals(line2Station.getName())) {
+    for (List<Station> list1 : line1Stations) {
+      for (Station line1Station : list1) {
+        for (List<Station> list2 : line2Stations) {
+          for (Station line2Station : list2) {
+            if (line1Station.getName().equals(line2Station.getName())) {
               answer.add(line1Station.getName());
             }
           }
@@ -129,7 +127,7 @@ public class StationServiceImpl implements StationService {
     }
     Set<String> tmp = new HashSet<>(answer);
     answer.clear();
-    for(String s : tmp) {
+    for (String s : tmp) {
       answer.add(s);
     }
     return answer;

@@ -100,5 +100,4 @@ class JinheCityBusSystemApplicationTests {
   void getSpecialStationsCount() {
     System.out.println(stationService.findSpecialStationsCount());
   }
-
 }

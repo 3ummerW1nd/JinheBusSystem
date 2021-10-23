@@ -1,6 +1,5 @@
 package com.example.jinhecitybussystem.entity.jsonEntity;
 import java.util.List;
-
 import lombok.Data;
 
 @Data

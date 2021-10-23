@@ -35,16 +35,12 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
   List<ListValue>
   findTimetableByLineAndEndStations(
       @Param(value = "lineName") String lineName, @Param(value = "stationName") String stationName);
-  @Query(
-          "MATCH (s:Station) where s.name =~ '地铁.*' return COUNT(DISTINCT s)")
+  @Query("MATCH (s:Station) where s.name =~ '地铁.*' return COUNT(DISTINCT s)")
   int findSubwayStationCount();
 
-  @Query(
-          "MATCH (s:Station) where s.name =~ '.*始发站.*' return COUNT(DISTINCT s)")
+  @Query("MATCH (s:Station) where s.name =~ '.*始发站.*' return COUNT(DISTINCT s)")
   int findDepartureStationCount();
 
-  @Query(
-          "MATCH (s:Station) where s.name =~ '.*终点站.*' return COUNT(DISTINCT s)")
+  @Query("MATCH (s:Station) where s.name =~ '.*终点站.*' return COUNT(DISTINCT s)")
   int findTerminalStationCount();
-
 }
