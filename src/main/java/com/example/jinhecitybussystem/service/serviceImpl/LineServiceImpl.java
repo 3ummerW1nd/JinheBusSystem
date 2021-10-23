@@ -6,6 +6,8 @@ import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
 import com.example.jinhecitybussystem.service.LineService;
 import com.example.jinhecitybussystem.service.RouteService;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +52,16 @@ public class LineServiceImpl implements LineService {
       List<String> lineNames = lineRepository.findLineNameByStationId(station.getId());
       answer.put(station, lineNames);
     }
+    return answer;
+  }
+
+  @Override
+  public List<Integer> findDifferentLinesCount() {
+    List<Integer> answer = new ArrayList<>();
+    answer.add(lineRepository.findNormalLineCount());
+    answer.add(lineRepository.findKLineCount());
+    answer.add(lineRepository.findGLineCount());
+    answer.add(lineRepository.findNLineCount());
     return answer;
   }
 }

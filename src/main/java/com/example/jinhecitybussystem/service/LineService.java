@@ -8,4 +8,5 @@ import java.util.Map;
 public interface LineService {
   Line findLineByName(String name);
   Map<Station, List<String>> findLinesByStationName(String stationName);
+  List<Integer> findDifferentLinesCount();
 }

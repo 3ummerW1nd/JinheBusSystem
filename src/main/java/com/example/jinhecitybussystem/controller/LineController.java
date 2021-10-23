@@ -33,4 +33,10 @@ public class LineController {
       @RequestParam("stationName") String stationName) {
     return lineService.findLinesByStationName(stationName);
   }
+
+  @ResponseBody
+  @GetMapping("/line/getDifferentLinesCount")
+  public List<Integer> getDifferentLinesCount() {
+    return lineService.findDifferentLinesCount();
+  }
 }

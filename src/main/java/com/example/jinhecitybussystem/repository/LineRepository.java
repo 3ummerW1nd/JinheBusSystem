@@ -17,4 +17,20 @@ public interface LineRepository extends Neo4jRepository<Line, Long> {
           "MATCH (s:Station)-[r:next]->(ss:Station) WHERE s.id = $stationId OR ss.id = $stationId  RETURN COUNT (DISTINCT r.line)")
   int
   findLineCountByStationId(@Param(value = "stationId") long stationId);
+  @Query(
+          "MATCH (l:Line) WHERE l.type = \"干线\" OR l.type = \"支线\" OR l.type = \"城乡线\" OR l.type = \"驳接线\" OR l.type = \"社区线\" RETURN COUNT (DISTINCT l)")
+  int
+  findNormalLineCount();
+  @Query(
+          "MATCH (l:Line) WHERE l.type = \"快速公交\" RETURN COUNT (DISTINCT l)")
+  int
+  findKLineCount();
+  @Query(
+          "MATCH (l:Line) WHERE l.type = \"高峰线\" RETURN COUNT (DISTINCT l)")
+  int
+  findGLineCount();
+  @Query(
+          "MATCH (l:Line) WHERE l.type = \"夜班线\" RETURN COUNT (DISTINCT l)")
+  int
+  findNLineCount();
 }
