@@ -2,6 +2,7 @@ package com.example.jinhecitybussystem.service.serviceImpl;
 
 import com.example.jinhecitybussystem.entity.VO.PathVO;
 import com.example.jinhecitybussystem.entity.VO.RouteVO;
+import com.example.jinhecitybussystem.entity.VO.ShiftVO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.repository.LineRepository;
@@ -13,6 +14,7 @@ import com.example.jinhecitybussystem.util.TimeUtil;
 
 import java.util.*;
 
+import org.neo4j.driver.internal.value.ListValue;
 import org.neo4j.driver.internal.value.PathValue;
 import org.neo4j.driver.types.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -222,9 +224,12 @@ public class RouteServiceImpl implements RouteService {
 
   @Override
   public PathVO findShortestPath(long startId, long endId) {
-    List<Object> objects = lineRepository.findShortestPathByStationIds(16115L, 14768L);
+    List<Object> objects = lineRepository.findShortestPathByStationIds(startId, endId);
     List<String> next = new ArrayList<>();
     List<Station> stations = new ArrayList<>();
+    if(objects.size() == 0) {
+      return new PathVO(null, null, -1);
+    }
     Object object = objects.get(0);
     PathValue pathValue = (PathValue) object;
     Iterator<Relationship> relationships = pathValue.asPath().relationships().iterator();
@@ -254,5 +259,28 @@ public class RouteServiceImpl implements RouteService {
       }
     }
     return new PathVO(next, stations, time);
+  }
+
+  @Override
+  public ShiftVO findShiftInformation(String route) {
+    List<Station> stations = stationRepository.findRouteStationsByLineName(route);
+    List<List<String>> timetable = new ArrayList<>();
+    for(int i = 0; i < stations.size() - 1; i ++) {
+      List<String> time = new ArrayList<>();
+      List<ListValue> tmp = stationRepository.findTimetableByLineAndStartStations(route, stations.get(i).getName());
+      for(ListValue it : tmp) {
+        for(Object o: it.asList())
+          time.add(o.toString());
+      }
+      timetable.add(time);
+    }
+    List<ListValue> tmp = stationRepository.findTimetableByLineAndEndStations(route, stations.get(stations.size() - 1).getName());
+    List<String> time = new ArrayList<>();
+    for(ListValue it : tmp) {
+      for(Object o: it.asList())
+        time.add(o.toString());
+    }
+    timetable.add(time);
+    return new ShiftVO(stations, timetable);
   }
 }

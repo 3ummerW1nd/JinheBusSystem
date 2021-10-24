@@ -2,6 +2,7 @@ package com.example.jinhecitybussystem.controller;
 
 import com.example.jinhecitybussystem.entity.VO.PathVO;
 import com.example.jinhecitybussystem.entity.VO.RouteVO;
+import com.example.jinhecitybussystem.entity.VO.ShiftVO;
 import com.example.jinhecitybussystem.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,8 +60,14 @@ public class RouteController {
 
   @ResponseBody
   @GetMapping("/route/getShortestPath")
-  public PathVO getShortestPath(@RequestParam("startId") String startId, @RequestParam("endId") String endId) {
-    return routeService.findShortestPath(Long.parseLong(startId), Long.parseLong(endId));
+  public PathVO getShortestPath(@RequestParam("startId") long startId, @RequestParam("endId") long endId) {
+    return routeService.findShortestPath(startId, endId);
+  }
+
+  @ResponseBody
+  @GetMapping("/route/getShiftInformation")
+  public ShiftVO getShiftInformation(@RequestParam("route") String route) {
+    return routeService.findShiftInformation(route);
   }
 
 }
