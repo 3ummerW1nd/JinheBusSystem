@@ -14,6 +14,8 @@ import com.example.jinhecitybussystem.util.FileUtil;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.example.jinhecitybussystem.util.TimeUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.neo4j.driver.Record;
@@ -75,7 +77,8 @@ class JinheCityBusSystemApplicationTests {
           start.add(timetables.get(k).get(j));
           end.add(timetables.get(k).get(j + 1));
         }
-        stationRepository.buildRoute(name, stations[j], stations[j + 1], start, end);
+        int time = TimeUtil.calculateTime(start.get(0), end.get(0));
+        stationRepository.buildRoute(name, stations[j], stations[j + 1], start, end, time);
       }
     }
   }

@@ -229,6 +229,7 @@ public class RouteServiceImpl implements RouteService {
     PathValue pathValue = (PathValue) object;
     Iterator<Relationship> relationships = pathValue.asPath().relationships().iterator();
     boolean isStart = true;
+    int time = 0;
     while (relationships.hasNext()) {
       Relationship relationship = relationships.next();
       long startNodeId = relationship.startNodeId();
@@ -247,8 +248,11 @@ public class RouteServiceImpl implements RouteService {
           String relValue = relationship.get(relKey).asObject().toString();
           next.add(relValue);
         }
+        if(relKey.equals("time")) {
+          time += relationship.get(relKey).asInt();
+        }
       }
     }
-    return new PathVO(next, stations, 0);
+    return new PathVO(next, stations, time);
   }
 }

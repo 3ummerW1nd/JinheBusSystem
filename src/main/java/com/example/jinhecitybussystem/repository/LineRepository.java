@@ -31,6 +31,9 @@ public interface LineRepository extends Neo4jRepository<Line, Long> {
   @Query("MATCH (l:Line) WHERE l.type = \"夜班线\" RETURN COUNT (DISTINCT l)") int findNLineCount();
   @Query("MATCH p=(start:Station)-[r:next]->(end:Station) WHERE start.id = $id1 AND end.id = $id2 RETURN DISTINCT r.line")
   List<String> findRoutesByStationIds(@Param(value = "id1")long id1, @Param(value = "id2")long id2);
-  @Query("MATCH p=SHORTESTPATH((:Station{id:$id1})-[*..]->(:Station{id:$id2})) RETURN p")
+//  @Query("MATCH p=SHORTESTPATH((:Station{id:$id1})-[*..]->(:Station{id:$id2})) RETURN p")
+  @Query("match (a:Station),(b:Station) WHERE a.id = $id1 AND b.id = $id2\n" +
+          "CALL apoc.algo.dijkstra(a,b,\"next\",\"time\")YIELD path, weight\n" +
+          "RETURN path")
   List<Object> findShortestPathByStationIds(@Param(value = "id1")long id1, @Param(value = "id2")long id2);
 }

@@ -12,11 +12,11 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
   @Query("MATCH (start:Station) WHERE id(start) = $id RETURN start")
   Station findStationByInnerId(@Param(value = "id")long id);
   @Query(
-      "MATCH (fromStation) WHERE fromStation.id = $fromId MATCH (toStation) WHERE toStation.id = $toId CREATE (fromStation)-[:next{line:$name, start:$start, end:$end}]->(toStation)")
+      "MATCH (fromStation) WHERE fromStation.id = $fromId MATCH (toStation) WHERE toStation.id = $toId CREATE (fromStation)-[:next{line:$name, start:$start, end:$end, time:$time}]->(toStation)")
   void
   buildRoute(@Param(value = "name") String name, @Param(value = "fromId") long fromId,
       @Param(value = "toId") long toId, @Param(value = "start") List<String> start,
-      @Param(value = "end") List<String> end);
+      @Param(value = "end") List<String> end, @Param(value = "time") int time);
 
   @Query("MATCH p=(start:Station)-[r:next{line:$lineName}]->(end:Station) RETURN p ORDER BY id(r)")
   List<Station> findRouteStationsByLineName(@Param(value = "lineName") String name);
