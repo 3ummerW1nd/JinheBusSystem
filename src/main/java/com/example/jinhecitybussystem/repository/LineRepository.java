@@ -38,4 +38,6 @@ public interface LineRepository extends Neo4jRepository<Line, Long> {
       + "RETURN path")
   List<Object>
   findShortestPathByStationIds(@Param(value = "id1") long id1, @Param(value = "id2") long id2);
+  @Query("MATCH p=()-[r:next{line:$route}]->() DETACH DELETE r")
+  void deleteRoute(@Param(value = "route") String route);
 }

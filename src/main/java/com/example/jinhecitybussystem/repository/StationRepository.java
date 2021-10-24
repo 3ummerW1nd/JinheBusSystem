@@ -42,4 +42,8 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
 
   @Query("MATCH (s:Station) where s.name =~ '.*终点站.*' return COUNT(DISTINCT s)")
   int findTerminalStationCount();
+
+  @Query("MATCH (n:Station) WHERE NOT (n)--() DELETE n")
+  void deleteAllIsolatedStations();
+
 }

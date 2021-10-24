@@ -1,16 +1,16 @@
 package com.example.jinhecitybussystem.controller;
 
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
+import com.example.jinhecitybussystem.entity.jsonEntity.Route;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
+import com.example.jinhecitybussystem.entity.jsonEntity.TimeTable;
 import com.example.jinhecitybussystem.service.LineService;
 import io.swagger.annotations.Api;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 @Api
 @Controller
@@ -39,4 +39,17 @@ public class LineController {
   public List<Integer> getDifferentLinesCount() {
     return lineService.findDifferentLinesCount();
   }
+
+  @ResponseBody
+  @PostMapping("/line/deleteLine")
+  public void deleteLine(@RequestBody Line line) {
+    lineService.deleteLine(line);
+  }
+
+  @ResponseBody
+  @PostMapping("/line/addLine")
+  public void addLine(Line line, Route route, TimeTable timeTable) {
+    lineService.addNewLine(line, route, timeTable);
+  }
+
 }

@@ -1,7 +1,9 @@
 package com.example.jinhecitybussystem.service.serviceImpl;
 
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
+import com.example.jinhecitybussystem.entity.jsonEntity.Route;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
+import com.example.jinhecitybussystem.entity.jsonEntity.TimeTable;
 import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
 import com.example.jinhecitybussystem.service.LineService;
@@ -10,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.example.jinhecitybussystem.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 @Service
@@ -62,5 +66,37 @@ public class LineServiceImpl implements LineService {
     answer.add(lineRepository.findGLineCount());
     answer.add(lineRepository.findNLineCount());
     return answer;
+  }
+
+  @Override
+  public void addNewLine(Line line, Route route, TimeTable timeTable) {
+    lineRepository.save(line);
+    String name = route.getName();
+    long[] stations = route.getAlongStation();
+    List<List<String>> timetables = timeTable.getTimetable();
+    for (int j = 0; j < stations.length - 1; j++) {
+      List<String> start = new ArrayList<>();
+      List<String> end = new ArrayList<>();
+      for (int k = 0; k < timetables.size(); k++) {
+        start.add(timetables.get(k).get(j));
+        end.add(timetables.get(k).get(j + 1));
+      }
+      int time = TimeUtil.calculateTime(start.get(0), end.get(0));
+      stationRepository.buildRoute(name, stations[j], stations[j + 1], start, end, time);
+    }
+  }
+
+  @Override
+  public void deleteLine(Line line) {
+    if(line.isDirectional()) {
+      String upRoute = line.getName() + "路上行";
+      lineRepository.deleteRoute(upRoute);
+      String downRoute = line.getName() + "路下行";
+      lineRepository.deleteRoute(downRoute);
+    } else {
+      String route = line.getName() + "路";
+      lineRepository.deleteRoute(route);
+    }
+    stationRepository.deleteAllIsolatedStations();
   }
 }
