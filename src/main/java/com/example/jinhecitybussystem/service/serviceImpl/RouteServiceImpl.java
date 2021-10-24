@@ -1,8 +1,8 @@
 package com.example.jinhecitybussystem.service.serviceImpl;
 
-import com.example.jinhecitybussystem.entity.VO.PathVO;
-import com.example.jinhecitybussystem.entity.VO.RouteVO;
-import com.example.jinhecitybussystem.entity.VO.ShiftVO;
+import com.example.jinhecitybussystem.entity.DTO.PathDTO;
+import com.example.jinhecitybussystem.entity.DTO.RouteDTO;
+import com.example.jinhecitybussystem.entity.DTO.ShiftDTO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.repository.LineRepository;
@@ -53,8 +53,8 @@ public class RouteServiceImpl implements RouteService {
   }
 
   @Override
-  public RouteVO findRouteByLineAndStation(String lineName, String start, String end) {
-    RouteVO answer = new RouteVO();
+  public RouteDTO findRouteByLineAndStation(String lineName, String start, String end) {
+    RouteDTO answer = new RouteDTO();
     answer.setStations(new ArrayList<>());
     Line line = lineService.findLineByName(lineName);
     List<List<Station>> stations = stationService.findStationsByLine(line);
@@ -223,12 +223,12 @@ public class RouteServiceImpl implements RouteService {
   }
 
   @Override
-  public PathVO findShortestPath(long startId, long endId) {
+  public PathDTO findShortestPath(long startId, long endId) {
     List<Object> objects = lineRepository.findShortestPathByStationIds(startId, endId);
     List<String> next = new ArrayList<>();
     List<Station> stations = new ArrayList<>();
     if(objects.size() == 0) {
-      return new PathVO(null, null, -1);
+      return new PathDTO(null, null, -1);
     }
     Object object = objects.get(0);
     PathValue pathValue = (PathValue) object;
@@ -258,11 +258,11 @@ public class RouteServiceImpl implements RouteService {
         }
       }
     }
-    return new PathVO(next, stations, time);
+    return new PathDTO(next, stations, time);
   }
 
   @Override
-  public ShiftVO findShiftInformation(String route) {
+  public ShiftDTO findShiftInformation(String route) {
     List<Station> stations = stationRepository.findRouteStationsByLineName(route);
     List<List<String>> timetable = new ArrayList<>();
     for(int i = 0; i < stations.size() - 1; i ++) {
@@ -281,6 +281,6 @@ public class RouteServiceImpl implements RouteService {
         time.add(o.toString());
     }
     timetable.add(time);
-    return new ShiftVO(stations, timetable);
+    return new ShiftDTO(stations, timetable);
   }
 }

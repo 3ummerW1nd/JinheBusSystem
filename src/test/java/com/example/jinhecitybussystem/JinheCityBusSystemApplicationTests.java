@@ -1,7 +1,7 @@
 package com.example.jinhecitybussystem;
 
 import com.alibaba.fastjson.JSON;
-import com.example.jinhecitybussystem.entity.VO.PathVO;
+import com.example.jinhecitybussystem.entity.DTO.PathDTO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Route;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
@@ -18,13 +18,7 @@ import java.util.List;
 import com.example.jinhecitybussystem.util.TimeUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.neo4j.driver.Record;
-import org.neo4j.driver.Result;
-import org.neo4j.driver.Value;
-import org.neo4j.driver.internal.value.ListValue;
 import org.neo4j.driver.internal.value.PathValue;
-import org.neo4j.driver.types.Node;
-import org.neo4j.driver.types.Path;
 import org.neo4j.driver.types.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -147,8 +141,8 @@ class JinheCityBusSystemApplicationTests {
         }
       }
     }
-    PathVO pathVO = new PathVO(next, stations, 0);
-    System.out.println(pathVO);
+    PathDTO pathDTO = new PathDTO(next, stations, 0);
+    System.out.println(pathDTO);
   }
 
 }

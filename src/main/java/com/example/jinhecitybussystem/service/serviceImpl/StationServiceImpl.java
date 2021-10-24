@@ -1,6 +1,6 @@
 package com.example.jinhecitybussystem.service.serviceImpl;
 
-import com.example.jinhecitybussystem.entity.VO.StationPairVO;
+import com.example.jinhecitybussystem.entity.DTO.StationPairDTO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.repository.LineRepository;
@@ -130,14 +130,14 @@ public class StationServiceImpl implements StationService {
   }
 
   @Override
-  public List<StationPairVO> findMostRouteStationPairs() {
-    List<StationPairVO> answer = new ArrayList<>();
+  public List<StationPairDTO> findMostRouteStationPairs() {
+    List<StationPairDTO> answer = new ArrayList<>();
     List<Station> allStations = stationRepository.findAll();
     for(int i = 0; i < allStations.size() - 1; i ++) {
       for(int j = i + 1; j < allStations.size(); j ++) {
         Station start = allStations.get(i);
         Station end = allStations.get(j);
-        StationPairVO tmp = new StationPairVO(start, end, lineRepository.findRoutesByStationIds(start.getId(), end.getId()).size());
+        StationPairDTO tmp = new StationPairDTO(start, end, lineRepository.findRoutesByStationIds(start.getId(), end.getId()).size());
       }
     }
     answer.sort((a, b)-> Integer.valueOf(b.getRouteAmount()).compareTo(Integer.valueOf(a.getRouteAmount())));
