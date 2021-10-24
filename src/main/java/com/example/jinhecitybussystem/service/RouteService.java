@@ -1,5 +1,6 @@
 package com.example.jinhecitybussystem.service;
 
+import com.example.jinhecitybussystem.entity.VO.PathVO;
 import com.example.jinhecitybussystem.entity.VO.RouteVO;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface RouteService {
   List<Map.Entry<String, Integer>> findMostStationsRoutes();
   List<Map.Entry<String, Integer>> findLongestRunTimeRoutes();
   List<String> findAllRoutes();
+  PathVO findShortestPath(long startId, long endId);
 }

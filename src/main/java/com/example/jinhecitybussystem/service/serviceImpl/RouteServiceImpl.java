@@ -1,5 +1,6 @@
 package com.example.jinhecitybussystem.service.serviceImpl;
 
+import com.example.jinhecitybussystem.entity.VO.PathVO;
 import com.example.jinhecitybussystem.entity.VO.RouteVO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
@@ -12,6 +13,8 @@ import com.example.jinhecitybussystem.util.TimeUtil;
 
 import java.util.*;
 
+import org.neo4j.driver.internal.value.PathValue;
+import org.neo4j.driver.types.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -215,5 +218,37 @@ public class RouteServiceImpl implements RouteService {
       }
     }
     return allRoute;
+  }
+
+  @Override
+  public PathVO findShortestPath(long startId, long endId) {
+    List<Object> objects = lineRepository.findShortestPathByStationIds(16115L, 14768L);
+    List<String> next = new ArrayList<>();
+    List<Station> stations = new ArrayList<>();
+    Object object = objects.get(0);
+    PathValue pathValue = (PathValue) object;
+    Iterator<Relationship> relationships = pathValue.asPath().relationships().iterator();
+    boolean isStart = true;
+    while (relationships.hasNext()) {
+      Relationship relationship = relationships.next();
+      long startNodeId = relationship.startNodeId();
+      long endNodeId = relationship.endNodeId();
+      if(isStart) {
+        stations.add(stationRepository.findStationByInnerId(startNodeId));
+        stations.add(stationRepository.findStationByInnerId(endNodeId));
+        isStart = false;
+      } else {
+        stations.add(stationRepository.findStationByInnerId(endNodeId));
+      }
+      Iterator<String> relKeys = relationship.keys().iterator();
+      while (relKeys.hasNext()) {
+        String relKey = relKeys.next();
+        if(relKey.equals("line")) {
+          String relValue = relationship.get(relKey).asObject().toString();
+          next.add(relValue);
+        }
+      }
+    }
+    return new PathVO(next, stations, 0);
   }
 }

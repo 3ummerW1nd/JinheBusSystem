@@ -9,7 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface StationRepository extends Neo4jRepository<Station, Long> {
   List<Station> findStationsByName(String name);
-
+  @Query("MATCH (start:Station) WHERE id(start) = $id RETURN start")
+  Station findStationByInnerId(@Param(value = "id")long id);
   @Query(
       "MATCH (fromStation) WHERE fromStation.id = $fromId MATCH (toStation) WHERE toStation.id = $toId CREATE (fromStation)-[:next{line:$name, start:$start, end:$end}]->(toStation)")
   void

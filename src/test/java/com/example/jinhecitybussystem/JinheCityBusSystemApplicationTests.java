@@ -1,6 +1,7 @@
 package com.example.jinhecitybussystem;
 
 import com.alibaba.fastjson.JSON;
+import com.example.jinhecitybussystem.entity.VO.PathVO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Route;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
@@ -11,9 +12,18 @@ import com.example.jinhecitybussystem.service.RouteService;
 import com.example.jinhecitybussystem.service.StationService;
 import com.example.jinhecitybussystem.util.FileUtil;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.neo4j.driver.Record;
+import org.neo4j.driver.Result;
+import org.neo4j.driver.Value;
+import org.neo4j.driver.internal.value.ListValue;
+import org.neo4j.driver.internal.value.PathValue;
+import org.neo4j.driver.types.Node;
+import org.neo4j.driver.types.Path;
+import org.neo4j.driver.types.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -107,8 +117,35 @@ class JinheCityBusSystemApplicationTests {
   }
 
   @Test
-  void getMostRouteStationPairs() {
-    System.out.println(stationService.findMostRouteStationPairs());
+  void getShortestPath() {
+    List<Object> objects = lineRepository.findShortestPathByStationIds(16115L, 14768L);
+    List<String> next = new ArrayList<>();
+    List<Station> stations = new ArrayList<>();
+    Object object = objects.get(0);
+    PathValue pathValue = (PathValue) object;
+    Iterator<Relationship> relationships = pathValue.asPath().relationships().iterator();
+    boolean isStart = true;
+    while (relationships.hasNext()) {
+      Relationship relationship = relationships.next();
+      long startNodeId = relationship.startNodeId();
+      long endNodeId = relationship.endNodeId();
+      if(isStart) {
+        stations.add(stationRepository.findStationByInnerId(startNodeId));
+        isStart = false;
+      } else {
+        stations.add(stationRepository.findStationByInnerId(endNodeId));
+      }
+      Iterator<String> relKeys = relationship.keys().iterator();
+      while (relKeys.hasNext()) {
+        String relKey = relKeys.next();
+        if(relKey.equals("line")) {
+          String relValue = relationship.get(relKey).asObject().toString();
+          next.add(relValue);
+        }
+      }
+    }
+    PathVO pathVO = new PathVO(next, stations, 0);
+    System.out.println(pathVO);
   }
 
 }
