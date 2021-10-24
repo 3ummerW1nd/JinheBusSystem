@@ -11,9 +11,7 @@ import com.example.jinhecitybussystem.service.LineService;
 import com.example.jinhecitybussystem.service.RouteService;
 import com.example.jinhecitybussystem.service.StationService;
 import com.example.jinhecitybussystem.util.TimeUtil;
-
 import java.util.*;
-
 import org.neo4j.driver.internal.value.ListValue;
 import org.neo4j.driver.internal.value.PathValue;
 import org.neo4j.driver.types.Relationship;
@@ -142,8 +140,9 @@ public class RouteServiceImpl implements RouteService {
   public Set<String> findTransferRoutes(String routeName) {
     Set<String> answer = new HashSet<>();
     List<Station> route = stationRepository.findRouteStationsByLineName(routeName);
-    for(int i = 0; i < route.size() - 1; i ++) {
-      answer.addAll(lineRepository.findRoutesByStationIds(route.get(i).getId(), route.get(i + 1).getId()));
+    for (int i = 0; i < route.size() - 1; i++) {
+      answer.addAll(
+          lineRepository.findRoutesByStationIds(route.get(i).getId(), route.get(i + 1).getId()));
     }
     answer.remove(routeName);
     return answer;
@@ -153,10 +152,10 @@ public class RouteServiceImpl implements RouteService {
   public List<Map.Entry<String, Integer>> findMostTransferRoutes() {
     List<String> allRoute = findAllRoutes();
     List<Map.Entry<String, Integer>> answer = new ArrayList<>();
-    for(String route : allRoute) {
+    for (String route : allRoute) {
       answer.add(Map.entry(route, findTransferRoutes(route).size()));
     }
-    answer.sort((a,b)->b.getValue().compareTo(a.getValue()));
+    answer.sort((a, b) -> b.getValue().compareTo(a.getValue()));
     return answer.subList(0, 15);
   }
 
@@ -164,16 +163,16 @@ public class RouteServiceImpl implements RouteService {
   public List<Map.Entry<String, Integer>> findMostStationsRoutes() {
     List<Map.Entry<String, Integer>> answer = new ArrayList<>();
     List<String> allRoute = findAllRoutes();
-    for(String route : allRoute) {
+    for (String route : allRoute) {
       int cnt = stationRepository.findRouteStationsByLineName(route).size();
       answer.add(Map.entry(route, cnt));
     }
-    answer.sort((a, b)->b.getValue().compareTo(a.getValue()));
+    answer.sort((a, b) -> b.getValue().compareTo(a.getValue()));
     List<Map.Entry<String, Integer>> limitedAnswer = new ArrayList<>();
-    for(int i = 0; i < 15; i ++) {
+    for (int i = 0; i < 15; i++) {
       limitedAnswer.add(answer.get(i));
     }
-    for(int i = answer.size() - 1; i >= answer.size() - 15; i --) {
+    for (int i = answer.size() - 1; i >= answer.size() - 15; i--) {
       limitedAnswer.add(answer.get(i));
     }
     return limitedAnswer;
@@ -184,24 +183,29 @@ public class RouteServiceImpl implements RouteService {
     List<Map.Entry<String, Integer>> answer = new ArrayList<>();
     List<Map.Entry<String, Integer>> limitedAnswer = new ArrayList<>();
     List<String> routes = findAllRoutes();
-    for(String route : routes) {
+    for (String route : routes) {
       List<Station> stations = stationRepository.findRouteStationsByLineName(route);
-      String startTime = stationRepository.findTimetableByLineAndStartStations(route, stations.get(0).getName()).get(0)
+      String startTime =
+          stationRepository.findTimetableByLineAndStartStations(route, stations.get(0).getName())
+              .get(0)
               .get(0)
               .toString()
               .substring(1, 6);
-      String endTime = stationRepository.findTimetableByLineAndEndStations(route, stations.get(stations.size() - 1).getName()).get(0)
+      String endTime =
+          stationRepository
+              .findTimetableByLineAndEndStations(route, stations.get(stations.size() - 1).getName())
+              .get(0)
               .get(0)
               .toString()
               .substring(1, 6);
       int time = TimeUtil.calculateTime(startTime, endTime);
       answer.add(Map.entry(route, time));
     }
-    answer.sort((a, b)->b.getValue().compareTo(a.getValue()));
-    for(int i = 0; i < 15; i ++) {
+    answer.sort((a, b) -> b.getValue().compareTo(a.getValue()));
+    for (int i = 0; i < 15; i++) {
       limitedAnswer.add(answer.get(i));
     }
-    for(int i = answer.size() - 1; i >= answer.size() - 15; i --) {
+    for (int i = answer.size() - 1; i >= answer.size() - 15; i--) {
       limitedAnswer.add(answer.get(i));
     }
     return limitedAnswer;
@@ -211,8 +215,8 @@ public class RouteServiceImpl implements RouteService {
   public List<String> findAllRoutes() {
     List<Line> allLines = lineRepository.findAll();
     List<String> allRoute = new ArrayList<>();
-    for(Line line : allLines) {
-      if(line.isDirectional()) {
+    for (Line line : allLines) {
+      if (line.isDirectional()) {
         allRoute.add(line.getName() + "路上行");
         allRoute.add(line.getName() + "路下行");
       } else {
@@ -227,7 +231,7 @@ public class RouteServiceImpl implements RouteService {
     List<Object> objects = lineRepository.findShortestPathByStationIds(startId, endId);
     List<String> next = new ArrayList<>();
     List<Station> stations = new ArrayList<>();
-    if(objects.size() == 0) {
+    if (objects.size() == 0) {
       return new PathDTO(null, null, -1);
     }
     Object object = objects.get(0);
@@ -239,7 +243,7 @@ public class RouteServiceImpl implements RouteService {
       Relationship relationship = relationships.next();
       long startNodeId = relationship.startNodeId();
       long endNodeId = relationship.endNodeId();
-      if(isStart) {
+      if (isStart) {
         stations.add(stationRepository.findStationByInnerId(startNodeId));
         stations.add(stationRepository.findStationByInnerId(endNodeId));
         isStart = false;
@@ -249,11 +253,11 @@ public class RouteServiceImpl implements RouteService {
       Iterator<String> relKeys = relationship.keys().iterator();
       while (relKeys.hasNext()) {
         String relKey = relKeys.next();
-        if(relKey.equals("line")) {
+        if (relKey.equals("line")) {
           String relValue = relationship.get(relKey).asObject().toString();
           next.add(relValue);
         }
-        if(relKey.equals("time")) {
+        if (relKey.equals("time")) {
           time += relationship.get(relKey).asInt();
         }
       }
@@ -265,20 +269,20 @@ public class RouteServiceImpl implements RouteService {
   public ShiftDTO findShiftInformation(String route) {
     List<Station> stations = stationRepository.findRouteStationsByLineName(route);
     List<List<String>> timetable = new ArrayList<>();
-    for(int i = 0; i < stations.size() - 1; i ++) {
+    for (int i = 0; i < stations.size() - 1; i++) {
       List<String> time = new ArrayList<>();
-      List<ListValue> tmp = stationRepository.findTimetableByLineAndStartStations(route, stations.get(i).getName());
-      for(ListValue it : tmp) {
-        for(Object o: it.asList())
-          time.add(o.toString());
+      List<ListValue> tmp =
+          stationRepository.findTimetableByLineAndStartStations(route, stations.get(i).getName());
+      for (ListValue it : tmp) {
+        for (Object o : it.asList()) time.add(o.toString());
       }
       timetable.add(time);
     }
-    List<ListValue> tmp = stationRepository.findTimetableByLineAndEndStations(route, stations.get(stations.size() - 1).getName());
+    List<ListValue> tmp = stationRepository.findTimetableByLineAndEndStations(
+        route, stations.get(stations.size() - 1).getName());
     List<String> time = new ArrayList<>();
-    for(ListValue it : tmp) {
-      for(Object o: it.asList())
-        time.add(o.toString());
+    for (ListValue it : tmp) {
+      for (Object o : it.asList()) time.add(o.toString());
     }
     timetable.add(time);
     return new ShiftDTO(stations, timetable);

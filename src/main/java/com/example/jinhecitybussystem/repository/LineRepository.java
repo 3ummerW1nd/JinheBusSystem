@@ -3,7 +3,6 @@ package com.example.jinhecitybussystem.repository;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import java.util.List;
 import java.util.Optional;
-
 import org.neo4j.driver.Result;
 import org.neo4j.driver.internal.value.ListValue;
 import org.neo4j.driver.types.Path;
@@ -29,11 +28,14 @@ public interface LineRepository extends Neo4jRepository<Line, Long> {
   int findKLineCount();
   @Query("MATCH (l:Line) WHERE l.type = \"高峰线\" RETURN COUNT (DISTINCT l)") int findGLineCount();
   @Query("MATCH (l:Line) WHERE l.type = \"夜班线\" RETURN COUNT (DISTINCT l)") int findNLineCount();
-  @Query("MATCH p=(start:Station)-[r:next]->(end:Station) WHERE start.id = $id1 AND end.id = $id2 RETURN DISTINCT r.line")
-  List<String> findRoutesByStationIds(@Param(value = "id1")long id1, @Param(value = "id2")long id2);
-//  @Query("MATCH p=SHORTESTPATH((:Station{id:$id1})-[*..]->(:Station{id:$id2})) RETURN p")
-  @Query("match (a:Station),(b:Station) WHERE a.id = $id1 AND b.id = $id2\n" +
-          "CALL apoc.algo.dijkstra(a,b,\"next\",\"time\")YIELD path, weight\n" +
-          "RETURN path")
-  List<Object> findShortestPathByStationIds(@Param(value = "id1")long id1, @Param(value = "id2")long id2);
+  @Query(
+      "MATCH p=(start:Station)-[r:next]->(end:Station) WHERE start.id = $id1 AND end.id = $id2 RETURN DISTINCT r.line")
+  List<String>
+  findRoutesByStationIds(@Param(value = "id1") long id1, @Param(value = "id2") long id2);
+  //  @Query("MATCH p=SHORTESTPATH((:Station{id:$id1})-[*..]->(:Station{id:$id2})) RETURN p")
+  @Query("match (a:Station),(b:Station) WHERE a.id = $id1 AND b.id = $id2\n"
+      + "CALL apoc.algo.dijkstra(a,b,\"next\",\"time\")YIELD path, weight\n"
+      + "RETURN path")
+  List<Object>
+  findShortestPathByStationIds(@Param(value = "id1") long id1, @Param(value = "id2") long id2);
 }

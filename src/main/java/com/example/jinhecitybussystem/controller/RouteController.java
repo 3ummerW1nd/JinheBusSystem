@@ -4,13 +4,12 @@ import com.example.jinhecitybussystem.entity.DTO.PathDTO;
 import com.example.jinhecitybussystem.entity.DTO.RouteDTO;
 import com.example.jinhecitybussystem.entity.DTO.ShiftDTO;
 import com.example.jinhecitybussystem.service.RouteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class RouteController {
@@ -24,7 +23,7 @@ public class RouteController {
   @ResponseBody
   @GetMapping("/route/getRouteByLine")
   public RouteDTO getRouteByLine(@RequestParam("line") String line,
-                                 @RequestParam("start") String start, @RequestParam("end") String end) {
+      @RequestParam("start") String start, @RequestParam("end") String end) {
     return routeService.findRouteByLineAndStation(line, start, end);
   }
 
@@ -60,7 +59,8 @@ public class RouteController {
 
   @ResponseBody
   @GetMapping("/route/getShortestPath")
-  public PathDTO getShortestPath(@RequestParam("startId") long startId, @RequestParam("endId") long endId) {
+  public PathDTO getShortestPath(
+      @RequestParam("startId") long startId, @RequestParam("endId") long endId) {
     return routeService.findShortestPath(startId, endId);
   }
 
@@ -69,5 +69,4 @@ public class RouteController {
   public ShiftDTO getShiftInformation(@RequestParam("route") String route) {
     return routeService.findShiftInformation(route);
   }
-
 }
