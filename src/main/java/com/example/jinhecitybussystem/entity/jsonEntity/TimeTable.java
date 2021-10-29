@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class TimeTable {
-  private long id;
   private String name;
   private List<List<String>> timetable;
 }

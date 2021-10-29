@@ -1,5 +1,6 @@
 package com.example.jinhecitybussystem.controller;
 
+import com.example.jinhecitybussystem.entity.DTO.NewLineDTO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Route;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
@@ -48,8 +49,8 @@ public class LineController {
 
   @ResponseBody
   @PostMapping("/line/addLine")
-  public void addLine(Line line, Route route, TimeTable timeTable) {
-    lineService.addNewLine(line, route, timeTable);
+  public void addLine(@RequestBody NewLineDTO newLineDTO) {
+    lineService.addNewLine(newLineDTO);
   }
 
 }

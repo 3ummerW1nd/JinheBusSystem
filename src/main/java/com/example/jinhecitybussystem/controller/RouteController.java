@@ -6,7 +6,7 @@ import com.example.jinhecitybussystem.entity.DTO.ShiftDTO;
 import com.example.jinhecitybussystem.service.RouteService;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +29,13 @@ public class RouteController {
 
   @ResponseBody
   @GetMapping("/route/direct")
-  public boolean isDirect(@RequestParam("start") String start, @RequestParam("end") String end) {
+  public List<String> isDirect(@RequestParam("start") String start, @RequestParam("end") String end) {
     return routeService.isDirect(start, end);
   }
 
   @ResponseBody
   @GetMapping("/route/getTransferLines")
-  public Set<String> getTransferLines(@RequestParam("route") String routeName) {
+  public Map<String, List<String>> getTransferLines(@RequestParam("route") String routeName) {
     return routeService.findTransferRoutes(routeName);
   }
 
@@ -61,7 +61,14 @@ public class RouteController {
   @GetMapping("/route/getShortestPath")
   public PathDTO getShortestPath(
       @RequestParam("startId") long startId, @RequestParam("endId") long endId) {
-    return routeService.findShortestPath(startId, endId);
+    return routeService.findShortestPathByStationIds(startId, endId);
+  }
+
+  @ResponseBody
+  @GetMapping("/route/getShortestPathByNames")
+  public PathDTO getShortestPathBynames(
+          @RequestParam("startName") String startName, @RequestParam("endName") String endName) {
+    return routeService.findShortestPathByStationNames(startName, endName);
   }
 
   @ResponseBody

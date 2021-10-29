@@ -18,6 +18,7 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
       @Param(value = "toId") long toId, @Param(value = "start") List<String> start,
       @Param(value = "end") List<String> end, @Param(value = "time") int time);
 
+  //需求2
   @Query("MATCH p=(start:Station)-[r:next{line:$lineName}]->(end:Station) RETURN p ORDER BY id(r)")
   List<Station> findRouteStationsByLineName(@Param(value = "lineName") String name);
 
@@ -34,16 +35,16 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
   List<ListValue>
   findTimetableByLineAndEndStations(
       @Param(value = "lineName") String lineName, @Param(value = "stationName") String stationName);
-  @Query("MATCH (s:Station) where s.name =~ '地铁.*' return COUNT(DISTINCT s)")
-  int findSubwayStationCount();
+  @Query("MATCH (s:Station) where s.name =~ '地铁.*' return DISTINCT s.name")
+  List<String> findSubwayStations();
 
-  @Query("MATCH (s:Station) where s.name =~ '.*始发站.*' return COUNT(DISTINCT s)")
-  int findDepartureStationCount();
+  @Query("MATCH (s:Station) where s.name =~ '.*始发站.*' return DISTINCT s.name")
+  List<String> findDepartureStations();
 
-  @Query("MATCH (s:Station) where s.name =~ '.*终点站.*' return COUNT(DISTINCT s)")
-  int findTerminalStationCount();
+  @Query("MATCH (s:Station) where s.name =~ '.*终点站.*' return DISTINCT s.name")
+  List<String> findTerminalStations();
 
   @Query("MATCH (n:Station) WHERE NOT (n)--() DELETE n")
-  void deleteAllIsolatedStations();
+  List<String> deleteAllIsolatedStations();
 
 }

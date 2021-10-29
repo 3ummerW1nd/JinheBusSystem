@@ -9,12 +9,13 @@ import java.util.Set;
 
 public interface RouteService {
   RouteDTO findRouteByLineAndStation(String line, String start, String end);
-  boolean isDirect(String start, String end);
-  Set<String> findTransferRoutes(String routeName);
+  List<String> isDirect(String start, String end);
+  Map<String, List<String>> findTransferRoutes(String routeName);
   List<Map.Entry<String, Integer>> findMostTransferRoutes();
   List<Map.Entry<String, Integer>> findMostStationsRoutes();
   List<Map.Entry<String, Integer>> findLongestRunTimeRoutes();
   List<String> findAllRoutes();
-  PathDTO findShortestPath(long startId, long endId);
+  PathDTO findShortestPathByStationIds(long startId, long endId);
+  PathDTO findShortestPathByStationNames(String startName, String endName);
   ShiftDTO findShiftInformation(String route);
 }

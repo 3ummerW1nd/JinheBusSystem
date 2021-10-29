@@ -16,4 +16,6 @@ public class PathDTO {
     this.stations = stations;
     this.time = time;
   }
+
+    public PathDTO() {}
 }

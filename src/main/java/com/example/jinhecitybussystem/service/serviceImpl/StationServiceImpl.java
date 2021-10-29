@@ -42,6 +42,11 @@ public class StationServiceImpl implements StationService {
   }
 
   @Override
+  public List<Station> findStationsByRoute(String route) {
+    return stationRepository.findRouteStationsByLineName(route);
+  }
+
+  @Override
   public List<Station> findAllStations() {
     return stationRepository.findAllStations();
   }
@@ -65,11 +70,22 @@ public class StationServiceImpl implements StationService {
   }
 
   @Override
-  public List<Integer> findSpecialStationsCount() {
-    List<Integer> answer = new ArrayList<>();
-    answer.add(stationRepository.findSubwayStationCount());
-    answer.add(stationRepository.findDepartureStationCount());
-    answer.add(stationRepository.findTerminalStationCount());
+  public List<String> findSubwayStations() {
+    return stationRepository.findSubwayStations();
+  }
+
+  @Override
+  public List<String> findDepartureStations() {
+    return stationRepository.findDepartureStations();
+  }
+
+  @Override
+  public List<String> findTerminalStations() {
+    return stationRepository.findTerminalStations();
+  }
+
+  @Override
+  public List<String> findSingleStations() {
     List<Line> allLines = lineRepository.findAll();
     Set<String> singleStation = new HashSet<>();
     for (Line line : allLines) {
@@ -96,36 +112,36 @@ public class StationServiceImpl implements StationService {
         tmp.clear();
       }
     }
-    //    for(String s : singleStation) {
-    //      System.out.println(s);
-    //    }
-    answer.add(singleStation.size());
-    return answer;
+    return new ArrayList<>(singleStation);
   }
 
   @Override
-  public List<String> findSameStationsByLineNames(String lineName1, String lineName2) {
-    List<String> answer = new ArrayList<>();
-    Line line1 = lineRepository.findByName(lineName1);
-    Line line2 = lineRepository.findByName(lineName2);
-    List<List<Station>> line1Stations = findStationsByLine(line1);
-    List<List<Station>> line2Stations = findStationsByLine(line2);
-    for (List<Station> list1 : line1Stations) {
-      for (Station line1Station : list1) {
-        for (List<Station> list2 : line2Stations) {
-          for (Station line2Station : list2) {
-            if (line1Station.getName().equals(line2Station.getName())) {
-              answer.add(line1Station.getName());
-            }
-          }
+  public Set<String> findSameStationsByRouteNames(String routeName1, String routeName2) {
+    List<Station> routeStations1 = stationRepository.findRouteStationsByLineName(routeName1);
+    List<Station> routeStations2 = stationRepository.findRouteStationsByLineName(routeName2);
+    Set<String> answer = new HashSet<>();
+    for(Station s1 : routeStations1) {
+      for(Station s2 : routeStations2) {
+        if (s1.getName().equals(s2.getName())) {
+          answer.add(s1.getName());
         }
       }
     }
-    Set<String> tmp = new HashSet<>(answer);
-    answer.clear();
-    for (String s : tmp) {
-      answer.add(s);
-    }
+//    Line line1 = lineRepository.findByName(routeName1);
+//    Line line2 = lineRepository.findByName(routeName2);
+//    List<List<Station>> line1Stations = findStationsByLine(line1);
+//    List<List<Station>> line2Stations = findStationsByLine(line2);
+//    for (List<Station> list1 : line1Stations) {
+//      for (Station line1Station : list1) {
+//        for (List<Station> list2 : line2Stations) {
+//          for (Station line2Station : list2) {
+//            if (line1Station.getName().equals(line2Station.getName())) {
+//              answer.add(line1Station.getName());
+//            }
+//          }
+//        }
+//      }
+//    }
     return answer;
   }
 

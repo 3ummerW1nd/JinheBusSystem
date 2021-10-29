@@ -90,7 +90,7 @@ class JinheCityBusSystemApplicationTests {
   }
   @Test
   void getTimetable() {
-    System.out.println(stationRepository.findTimetableByLineAndStartStations("10路上行", "大悦城"));
+
   }
 
   @Test
@@ -105,7 +105,7 @@ class JinheCityBusSystemApplicationTests {
 
   @Test
   void getSpecialStationsCount() {
-    System.out.println(stationService.findSpecialStationsCount());
+
   }
 
   @Test

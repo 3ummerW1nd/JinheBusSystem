@@ -119,7 +119,8 @@ public class RouteServiceImpl implements RouteService {
   }
 
   @Override
-  public boolean isDirect(String start, String end) {
+  public List<String> isDirect(String start, String end) {
+    List<String> answer = new ArrayList<>();
     Map<Station, List<String>> map = lineService.findLinesByStationName(start);
     List<String> lineNames = new ArrayList<>();
     for (Map.Entry<Station, List<String>> entry : map.entrySet()) {
@@ -129,23 +130,26 @@ public class RouteServiceImpl implements RouteService {
       List<Station> route = stationRepository.findRouteStationsByLineName(lineName);
       for (Station station : route) {
         if (station.getName().equals(end)) {
-          return true;
+          answer.add(lineName);
         }
       }
     }
-    return false;
+    if(answer.isEmpty())
+      answer.add("无直达线路");
+    return answer;
   }
 
   @Override
-  public Set<String> findTransferRoutes(String routeName) {
-    Set<String> answer = new HashSet<>();
+  public Map<String, List<String>> findTransferRoutes(String routeName) {
+    Map<String, List<String>> map = new HashMap<>();
     List<Station> route = stationRepository.findRouteStationsByLineName(routeName);
-    for (int i = 0; i < route.size() - 1; i++) {
-      answer.addAll(
-          lineRepository.findRoutesByStationIds(route.get(i).getId(), route.get(i + 1).getId()));
+    for (Station station : route) {
+      Set<String> tmp = new HashSet<>(lineRepository.findLineNameByStationId(station.getId()));
+      tmp.remove(routeName);
+      if(tmp.size() != 0)
+        map.put(station.getName(), new ArrayList<>(tmp));
     }
-    answer.remove(routeName);
-    return answer;
+    return map;
   }
 
   @Override
@@ -170,9 +174,6 @@ public class RouteServiceImpl implements RouteService {
     answer.sort((a, b) -> b.getValue().compareTo(a.getValue()));
     List<Map.Entry<String, Integer>> limitedAnswer = new ArrayList<>();
     for (int i = 0; i < 15; i++) {
-      limitedAnswer.add(answer.get(i));
-    }
-    for (int i = answer.size() - 1; i >= answer.size() - 15; i--) {
       limitedAnswer.add(answer.get(i));
     }
     return limitedAnswer;
@@ -205,9 +206,6 @@ public class RouteServiceImpl implements RouteService {
     for (int i = 0; i < 15; i++) {
       limitedAnswer.add(answer.get(i));
     }
-    for (int i = answer.size() - 1; i >= answer.size() - 15; i--) {
-      limitedAnswer.add(answer.get(i));
-    }
     return limitedAnswer;
   }
 
@@ -227,7 +225,7 @@ public class RouteServiceImpl implements RouteService {
   }
 
   @Override
-  public PathDTO findShortestPath(long startId, long endId) {
+  public PathDTO findShortestPathByStationIds(long startId, long endId) {
     List<Object> objects = lineRepository.findShortestPathByStationIds(startId, endId);
     List<String> next = new ArrayList<>();
     List<Station> stations = new ArrayList<>();
@@ -263,6 +261,24 @@ public class RouteServiceImpl implements RouteService {
       }
     }
     return new PathDTO(next, stations, time);
+  }
+
+  @Override
+  public PathDTO findShortestPathByStationNames(String startName, String endName) {
+    PathDTO answer = new PathDTO();
+    int minTime = Integer.MAX_VALUE;
+    List<Station> startStations = stationRepository.findStationsByName(startName);
+    List<Station> endStations = stationRepository.findStationsByName(endName);
+    for(Station start : startStations) {
+      for(Station end : endStations) {
+        PathDTO tmp = findShortestPathByStationIds(start.getId(), end.getId());
+        if(tmp.getTime() < minTime) {
+          answer = tmp;
+          minTime = tmp.getTime();
+        }
+      }
+    }
+    return answer;
   }
 
   @Override

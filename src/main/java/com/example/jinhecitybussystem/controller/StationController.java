@@ -1,10 +1,11 @@
 package com.example.jinhecitybussystem.controller;
 
-import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.service.StationService;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +19,10 @@ public class StationController {
   }
 
   @ResponseBody
-  @PostMapping("/station/getRouteStations")
-  public List<List<Station>> getRouteStations(@RequestBody Line line) {
-    return stationService.findStationsByLine(line);
+  @GetMapping("/station/getRouteStations")
+  public List<Station> getRouteStations(@RequestParam("routeName") String route) {
+    return stationService.findStationsByRoute(route);
   }
-
-  @ResponseBody
-  @GetMapping("/station/getAllStations")
-  public List<Station> getAllStations() {
-    return stationService.findAllStations();
-  }
-  // TODO:分页
 
   @ResponseBody
   @GetMapping("/station/getStationsWithMostAndLeastLines")
@@ -37,15 +31,33 @@ public class StationController {
   }
 
   @ResponseBody
-  @GetMapping("/station/getSpecialStationsCount")
-  public List<Integer> getSpecialStationsCount() {
-    return stationService.findSpecialStationsCount();
+  @GetMapping("/station/getSubwayStations")
+  public List<String> getSubwayStations() {
+    return stationService.findSubwayStations();
+  }
+
+  @ResponseBody
+  @GetMapping("/station/getDepartureStations")
+  public List<String> getDepartureStations() {
+    return stationService.findDepartureStations();
+  }
+
+  @ResponseBody
+  @GetMapping("/station/getTerminalStations")
+  public List<String> getTerminalStations() {
+    return stationService.findTerminalStations();
+  }
+
+  @ResponseBody
+  @GetMapping("/station/getSingleStations")
+  public List<String> getSingleStations() {
+    return stationService.findSingleStations();
   }
 
   @ResponseBody
   @GetMapping("/station/getSameStations")
-  public List<String> getSameStation(
-      @RequestParam("lineName1") String lineName1, @RequestParam("lineName2") String lineName2) {
-    return stationService.findSameStationsByLineNames(lineName1, lineName2);
+  public Set<String> getSameStation(
+      @RequestParam("routeName1") String routeName1, @RequestParam("routeName2") String routeName2) {
+    return stationService.findSameStationsByRouteNames(routeName1, routeName2);
   }
 }
