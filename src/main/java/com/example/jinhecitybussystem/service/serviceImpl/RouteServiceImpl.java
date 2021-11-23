@@ -134,7 +134,7 @@ public class RouteServiceImpl implements RouteService {
         }
       }
     }
-    if(answer.isEmpty())
+    if (answer.isEmpty())
       answer.add("无直达线路");
     return answer;
   }
@@ -146,7 +146,7 @@ public class RouteServiceImpl implements RouteService {
     for (Station station : route) {
       Set<String> tmp = new HashSet<>(lineRepository.findLineNameByStationId(station.getId()));
       tmp.remove(routeName);
-      if(tmp.size() != 0)
+      if (tmp.size() != 0)
         map.put(station.getName(), new ArrayList<>(tmp));
     }
     return map;
@@ -269,10 +269,10 @@ public class RouteServiceImpl implements RouteService {
     int minTime = Integer.MAX_VALUE;
     List<Station> startStations = stationRepository.findStationsByName(startName);
     List<Station> endStations = stationRepository.findStationsByName(endName);
-    for(Station start : startStations) {
-      for(Station end : endStations) {
+    for (Station start : startStations) {
+      for (Station end : endStations) {
         PathDTO tmp = findShortestPathByStationIds(start.getId(), end.getId());
-        if(tmp.getTime() < minTime) {
+        if (tmp.getTime() < minTime) {
           answer = tmp;
           minTime = tmp.getTime();
         }

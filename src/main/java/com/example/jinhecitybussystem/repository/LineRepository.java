@@ -1,11 +1,8 @@
 package com.example.jinhecitybussystem.repository;
 
-import com.example.jinhecitybussystem.entity.QueryResult.PassLine;
+import com.example.jinhecitybussystem.entity.DTO.LinesDTO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import java.util.List;
-
-import org.neo4j.driver.Record;
-import org.neo4j.driver.Result;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,4 +34,6 @@ public interface LineRepository extends Neo4jRepository<Line, Long> {
   findShortestPathByStationIds(@Param(value = "id1") long id1, @Param(value = "id2") long id2);
   @Query("MATCH p=()-[r:next{line:$route}]->() DETACH DELETE r")
   void deleteRoute(@Param(value = "route") String route);
+  @Query("match (s:Station{name:$stationName})-[r:next]-(:Station) return distinct s.id+collect(r.line) as lines")
+  List<String> findLinesByStationName(@Param(value = "stationName") String stationName);
 }

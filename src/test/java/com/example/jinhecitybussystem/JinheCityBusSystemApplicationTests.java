@@ -8,6 +8,7 @@ import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.entity.jsonEntity.TimeTable;
 import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
+import com.example.jinhecitybussystem.service.LineService;
 import com.example.jinhecitybussystem.service.RouteService;
 import com.example.jinhecitybussystem.service.StationService;
 import com.example.jinhecitybussystem.util.FileUtil;
@@ -31,6 +32,8 @@ class JinheCityBusSystemApplicationTests {
   @Autowired LineRepository lineRepository;
   @Autowired RouteService routeService;
   @Autowired StationService stationService;
+  @Autowired
+  LineService lineService;
 
   @Test
   void saveAllStation() {
@@ -100,7 +103,7 @@ class JinheCityBusSystemApplicationTests {
 
   @Test
   void getMostAndLeast() {
-    System.out.println(stationService.findStationsWithMostOrLeastLines());
+    System.out.println(stationService.findStationsWithMostLines());
   }
 
   @Test
@@ -110,7 +113,7 @@ class JinheCityBusSystemApplicationTests {
 
   @Test
   void getMostTransferRoutes() {
-    System.out.println(routeService.findMostTransferRoutes());
+    System.out.println(lineService.neoFindLinesByStationName("锦城广场"));
   }
 
   @Test

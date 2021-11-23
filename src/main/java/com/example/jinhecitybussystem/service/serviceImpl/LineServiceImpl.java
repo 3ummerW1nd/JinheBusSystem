@@ -1,7 +1,7 @@
 package com.example.jinhecitybussystem.service.serviceImpl;
 
+import com.example.jinhecitybussystem.entity.DTO.LinesDTO;
 import com.example.jinhecitybussystem.entity.DTO.NewLineDTO;
-import com.example.jinhecitybussystem.entity.QueryResult.PassLine;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Route;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
@@ -10,14 +10,14 @@ import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
 import com.example.jinhecitybussystem.service.LineService;
 import com.example.jinhecitybussystem.service.RouteService;
+import com.example.jinhecitybussystem.util.TimeUtil;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.example.jinhecitybussystem.util.TimeUtil;
 import org.neo4j.driver.Record;
 import org.neo4j.driver.Result;
+import org.neo4j.driver.internal.value.ListValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 @Service
@@ -50,6 +50,7 @@ public class LineServiceImpl implements LineService {
     return answer;
   }
 
+
   @Override
   public List<Integer> findDifferentLinesCount() {
     List<Integer> answer = new ArrayList<>();
@@ -61,33 +62,31 @@ public class LineServiceImpl implements LineService {
   }
 
   @Override
-  public void addNewLine(NewLineDTO newLineDTO) {
+  public void addNewLine(NewLineDTO newLineDTO) {}
 
-  }
-
-//  @Override
-//  public void addNewLine(NewLineDTO newLineDTO) {
-//    Line line = new Line();
-//
-//    lineRepository.save(line);
-//    String name = route.getName();
-//    long[] stations = route.getAlongStation();
-//    List<List<String>> timetables = timeTable.getTimetable();
-//    for (int j = 0; j < stations.length - 1; j++) {
-//      List<String> start = new ArrayList<>();
-//      List<String> end = new ArrayList<>();
-//      for (int k = 0; k < timetables.size(); k++) {
-//        start.add(timetables.get(k).get(j));
-//        end.add(timetables.get(k).get(j + 1));
-//      }
-//      int time = TimeUtil.calculateTime(start.get(0), end.get(0));
-//      stationRepository.buildRoute(name, stations[j], stations[j + 1], start, end, time);
-//    }
-//  }
+  //  @Override
+  //  public void addNewLine(NewLineDTO newLineDTO) {
+  //    Line line = new Line();
+  //
+  //    lineRepository.save(line);
+  //    String name = route.getName();
+  //    long[] stations = route.getAlongStation();
+  //    List<List<String>> timetables = timeTable.getTimetable();
+  //    for (int j = 0; j < stations.length - 1; j++) {
+  //      List<String> start = new ArrayList<>();
+  //      List<String> end = new ArrayList<>();
+  //      for (int k = 0; k < timetables.size(); k++) {
+  //        start.add(timetables.get(k).get(j));
+  //        end.add(timetables.get(k).get(j + 1));
+  //      }
+  //      int time = TimeUtil.calculateTime(start.get(0), end.get(0));
+  //      stationRepository.buildRoute(name, stations[j], stations[j + 1], start, end, time);
+  //    }
+  //  }
 
   @Override
   public void deleteLine(Line line) {
-    if(line.isDirectional()) {
+    if (line.isDirectional()) {
       String upRoute = line.getName() + "路上行";
       lineRepository.deleteRoute(upRoute);
       String downRoute = line.getName() + "路下行";
@@ -97,5 +96,10 @@ public class LineServiceImpl implements LineService {
       lineRepository.deleteRoute(route);
     }
     stationRepository.deleteAllIsolatedStations();
+  }
+
+  @Override
+  public List<String> neoFindLinesByStationName(String stationName) {
+    return lineRepository.findLinesByStationName(stationName);
   }
 }

@@ -25,9 +25,9 @@ public class StationController {
   }
 
   @ResponseBody
-  @GetMapping("/station/getStationsWithMostAndLeastLines")
+  @GetMapping("/station/getStationsWithMostLines")
   public List<Map.Entry<Station, Integer>> getStationsWithMostAndLeastLines() {
-    return stationService.findStationsWithMostOrLeastLines();
+    return stationService.findStationsWithMostLines();
   }
 
   @ResponseBody
@@ -50,8 +50,8 @@ public class StationController {
 
   @ResponseBody
   @GetMapping("/station/getSingleStations")
-  public List<String> getSingleStations() {
-    return stationService.findSingleStations();
+  public List<String> getSingleStations(String lineName) {
+    return stationService.findSingleStations(lineName);
   }
 
   @ResponseBody

@@ -11,11 +11,11 @@ public interface StationService {
   List<List<Station>> findStationsByLine(Line line);
   List<Station> findStationsByRoute(String route);
   List<Station> findAllStations();
-  List<Map.Entry<Station, Integer>> findStationsWithMostOrLeastLines();
+  List<Map.Entry<Station, Integer>> findStationsWithMostLines();
   List<String> findSubwayStations();
   List<String> findDepartureStations();
   List<String> findTerminalStations();
-  List<String> findSingleStations();
+  List<String> findSingleStations(String lineName);
   Set<String> findSameStationsByRouteNames(String lineName1, String lineName2);
   List<StationPairDTO> findMostRouteStationPairs();
 }

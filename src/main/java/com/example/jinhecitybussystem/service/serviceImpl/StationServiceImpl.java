@@ -52,7 +52,7 @@ public class StationServiceImpl implements StationService {
   }
 
   @Override
-  public List<Map.Entry<Station, Integer>> findStationsWithMostOrLeastLines() {
+  public List<Map.Entry<Station, Integer>> findStationsWithMostLines() {
     List<Map.Entry<Station, Integer>> answer = new ArrayList<>();
     List<Map.Entry<Station, Integer>> list = new ArrayList<>();
     List<Station> allStations = findAllStations();
@@ -60,9 +60,6 @@ public class StationServiceImpl implements StationService {
       list.add(Map.entry(station, lineRepository.findLineCountByStationId(station.getId())));
     }
     list.sort(Comparator.comparing(Map.Entry::getValue));
-    for (int i = 0; i < 15; i++) {
-      answer.add(list.get(i));
-    }
     for (int i = list.size() - 1; i >= list.size() - 16; i--) {
       answer.add(list.get(i));
     }
@@ -85,32 +82,30 @@ public class StationServiceImpl implements StationService {
   }
 
   @Override
-  public List<String> findSingleStations() {
-    List<Line> allLines = lineRepository.findAll();
+  public List<String> findSingleStations(String lineName) {
+    Line line = lineRepository.findByName(lineName);
     Set<String> singleStation = new HashSet<>();
-    for (Line line : allLines) {
-      List<List<Station>> routes = findStationsByLine(line);
-      if (routes.size() == 2) {
-        Set<String> upRouteSet = new HashSet<>();
-        Set<String> downRouteSet = new HashSet<>();
-        Set<String> tmp = new HashSet<>();
-        List<Station> upRoute = routes.get(0);
-        List<Station> downRoute = routes.get(1);
-        for (Station station : upRoute) {
-          upRouteSet.add(station.getName());
-        }
-        for (Station station : downRoute) {
-          downRouteSet.add(station.getName());
-        }
-        tmp.addAll(upRouteSet);
-        tmp.removeAll(downRouteSet);
-        singleStation.addAll(tmp);
-        tmp.clear();
-        tmp.addAll(downRouteSet);
-        tmp.removeAll(upRoute);
-        singleStation.addAll(tmp);
-        tmp.clear();
+    List<List<Station>> routes = findStationsByLine(line);
+    if (routes.size() == 2) {
+      Set<String> upRouteSet = new HashSet<>();
+      Set<String> downRouteSet = new HashSet<>();
+      List<Station> upRoute = routes.get(0);
+      List<Station> downRoute = routes.get(1);
+      for (Station station : upRoute) {
+        upRouteSet.add(station.getName());
       }
+      for (Station station : downRoute) {
+        downRouteSet.add(station.getName());
+      }
+      System.out.println(upRouteSet);
+      System.out.println(downRouteSet);
+      Set<String> tmp = new HashSet<>(upRouteSet);
+      tmp.removeAll(downRouteSet);
+      singleStation.addAll(tmp);
+      tmp = new HashSet<>(downRouteSet);
+      tmp.removeAll(upRouteSet);
+      singleStation.addAll(tmp);
+      tmp.clear();
     }
     return new ArrayList<>(singleStation);
   }
@@ -120,28 +115,28 @@ public class StationServiceImpl implements StationService {
     List<Station> routeStations1 = stationRepository.findRouteStationsByLineName(routeName1);
     List<Station> routeStations2 = stationRepository.findRouteStationsByLineName(routeName2);
     Set<String> answer = new HashSet<>();
-    for(Station s1 : routeStations1) {
-      for(Station s2 : routeStations2) {
+    for (Station s1 : routeStations1) {
+      for (Station s2 : routeStations2) {
         if (s1.getName().equals(s2.getName())) {
           answer.add(s1.getName());
         }
       }
     }
-//    Line line1 = lineRepository.findByName(routeName1);
-//    Line line2 = lineRepository.findByName(routeName2);
-//    List<List<Station>> line1Stations = findStationsByLine(line1);
-//    List<List<Station>> line2Stations = findStationsByLine(line2);
-//    for (List<Station> list1 : line1Stations) {
-//      for (Station line1Station : list1) {
-//        for (List<Station> list2 : line2Stations) {
-//          for (Station line2Station : list2) {
-//            if (line1Station.getName().equals(line2Station.getName())) {
-//              answer.add(line1Station.getName());
-//            }
-//          }
-//        }
-//      }
-//    }
+    //    Line line1 = lineRepository.findByName(routeName1);
+    //    Line line2 = lineRepository.findByName(routeName2);
+    //    List<List<Station>> line1Stations = findStationsByLine(line1);
+    //    List<List<Station>> line2Stations = findStationsByLine(line2);
+    //    for (List<Station> list1 : line1Stations) {
+    //      for (Station line1Station : list1) {
+    //        for (List<Station> list2 : line2Stations) {
+    //          for (Station line2Station : list2) {
+    //            if (line1Station.getName().equals(line2Station.getName())) {
+    //              answer.add(line1Station.getName());
+    //            }
+    //          }
+    //        }
+    //      }
+    //    }
     return answer;
   }
 
