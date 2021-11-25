@@ -1,6 +1,5 @@
 package com.example.jinhecitybussystem.repository;
 
-import com.example.jinhecitybussystem.entity.DTO.LinesDTO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import java.util.List;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -8,9 +7,7 @@ import org.springframework.data.neo4j.repository.query.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface LineRepository extends Neo4jRepository<Line, Long> {
-  //需求1
   Line findByName(String name);
-  //需求3（需要修改，目前较为低效）
   @Query(
           "MATCH (s:Station)-[r:next]->(ss:Station) WHERE s.id = $stationId OR ss.id = $stationId  RETURN DISTINCT r.line")
   List<String>

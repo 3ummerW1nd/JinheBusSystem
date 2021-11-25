@@ -60,15 +60,7 @@ public class RouteServiceImpl implements RouteService {
       answer.setName(lineName + "路");
       List<Station> route = stations.get(0);
       int startIndex = -1, endIndex = -1;
-      for (int i = 0; i < route.size(); i++) {
-        if (route.get(i).getName().equals(start))
-          startIndex = i;
-        if (route.get(i).getName().equals(end))
-          endIndex = i;
-      }
-      for (int i = startIndex; i <= endIndex; i++) {
-        answer.getStations().add(route.get(i));
-      }
+      buildRoute(start, end, answer, route, startIndex, endIndex);
     } else {
       List<Station> upRoute = stations.get(0);
       List<Station> downRoute = stations.get(1);
@@ -86,15 +78,7 @@ public class RouteServiceImpl implements RouteService {
         }
       } else {
         answer.setName(lineName + "路下行");
-        for (int i = 0; i < downRoute.size(); i++) {
-          if (downRoute.get(i).getName().equals(start))
-            startIndex = i;
-          if (downRoute.get(i).getName().equals(end))
-            endIndex = i;
-        }
-        for (int i = startIndex; i <= endIndex; i++) {
-          answer.getStations().add(downRoute.get(i));
-        }
+        buildRoute(start, end, answer, downRoute, startIndex, endIndex);
       }
     }
     List<Station> answerRoute = answer.getStations();
@@ -118,6 +102,18 @@ public class RouteServiceImpl implements RouteService {
     return answer;
   }
 
+  private void buildRoute(String start, String end, RouteDTO answer, List<Station> downRoute, int startIndex, int endIndex) {
+    for (int i = 0; i < downRoute.size(); i++) {
+      if (downRoute.get(i).getName().equals(start))
+        startIndex = i;
+      if (downRoute.get(i).getName().equals(end))
+        endIndex = i;
+    }
+    for (int i = startIndex; i <= endIndex; i++) {
+      answer.getStations().add(downRoute.get(i));
+    }
+  }
+
   @Override
   public List<String> isDirect(String start, String end) {
     List<String> answer = new ArrayList<>();
@@ -128,9 +124,19 @@ public class RouteServiceImpl implements RouteService {
     }
     for (String lineName : lineNames) {
       List<Station> route = stationRepository.findRouteStationsByLineName(lineName);
-      for (Station station : route) {
-        if (station.getName().equals(end)) {
+      int index = -1;
+      for (int i = 0; i < route.size(); i ++) {
+        if(route.get(i).getName().equals(start)) {
+          index = i;
+          break;
+        }
+      }
+      if(index == -1)
+        continue;
+      for (int i = index; i < route.size(); i ++) {
+        if(route.get(i).getName().equals(end)) {
           answer.add(lineName);
+          break;
         }
       }
     }
