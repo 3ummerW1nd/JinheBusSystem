@@ -52,14 +52,14 @@ public class StationServiceImpl implements StationService {
   }
 
   @Override
-  public List<Map.Entry<Station, Integer>> findStationsWithMostLines() {
-    List<Map.Entry<Station, Integer>> answer = new ArrayList<>();
-    List<Map.Entry<Station, Integer>> list = new ArrayList<>();
+  public List<Map.Entry<Station, List<String>>> findStationsWithMostLines() {
+    List<Map.Entry<Station, List<String>>> answer = new ArrayList<>();
+    List<Map.Entry<Station, List<String>>> list = new ArrayList<>();
     List<Station> allStations = findAllStations();
     for (Station station : allStations) {
-      list.add(Map.entry(station, lineRepository.findLineCountByStationId(station.getId())));
+      list.add(Map.entry(station, lineRepository.findLinesByStationId(station.getId())));
     }
-    list.sort(Comparator.comparing(Map.Entry::getValue));
+    list.sort(Comparator.comparingInt(a -> a.getValue().size()));
     for (int i = list.size() - 1; i >= list.size() - 16; i--) {
       answer.add(list.get(i));
     }
@@ -122,21 +122,6 @@ public class StationServiceImpl implements StationService {
         }
       }
     }
-    //    Line line1 = lineRepository.findByName(routeName1);
-    //    Line line2 = lineRepository.findByName(routeName2);
-    //    List<List<Station>> line1Stations = findStationsByLine(line1);
-    //    List<List<Station>> line2Stations = findStationsByLine(line2);
-    //    for (List<Station> list1 : line1Stations) {
-    //      for (Station line1Station : list1) {
-    //        for (List<Station> list2 : line2Stations) {
-    //          for (Station line2Station : list2) {
-    //            if (line1Station.getName().equals(line2Station.getName())) {
-    //              answer.add(line1Station.getName());
-    //            }
-    //          }
-    //        }
-    //      }
-    //    }
     return answer;
   }
 

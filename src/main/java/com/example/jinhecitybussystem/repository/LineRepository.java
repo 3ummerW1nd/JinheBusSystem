@@ -1,5 +1,4 @@
 package com.example.jinhecitybussystem.repository;
-
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import java.util.List;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
@@ -33,4 +32,6 @@ public interface LineRepository extends Neo4jRepository<Line, Long> {
   void deleteRoute(@Param(value = "route") String route);
   @Query("match (s:Station{name:$stationName})-[r:next]-(:Station) return distinct s.id+collect(r.line) as lines")
   List<String> findLinesByStationName(@Param(value = "stationName") String stationName);
+  @Query("match (s:Station{id:$stationId})-[r:next]-(:Station) return distinct r.line as lines")
+  List<String> findLinesByStationId(@Param(value = "stationId") long stationId);
 }

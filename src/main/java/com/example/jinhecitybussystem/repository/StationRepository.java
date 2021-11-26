@@ -18,7 +18,6 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
       @Param(value = "toId") long toId, @Param(value = "start") List<String> start,
       @Param(value = "end") List<String> end, @Param(value = "time") int time);
 
-  //需求2
   @Query("MATCH p=(start:Station)-[r:next{line:$lineName}]->(end:Station) RETURN p ORDER BY id(r)")
   List<Station> findRouteStationsByLineName(@Param(value = "lineName") String name);
 

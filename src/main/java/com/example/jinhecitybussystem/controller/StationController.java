@@ -26,7 +26,7 @@ public class StationController {
 
   @ResponseBody
   @GetMapping("/station/getStationsWithMostLines")
-  public List<Map.Entry<Station, Integer>> getStationsWithMostAndLeastLines() {
+  public List<Map.Entry<Station, List<String>>> getStationsWithMostLines() {
     return stationService.findStationsWithMostLines();
   }
 
