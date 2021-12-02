@@ -2,6 +2,8 @@ package com.example.jinhecitybussystem.repository;
 
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import java.util.List;
+
+import org.neo4j.driver.Value;
 import org.neo4j.driver.internal.value.ListValue;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
@@ -22,6 +24,9 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
   List<Station> findRouteStationsByLineName(@Param(value = "lineName") String name);
 
   @Query("MATCH (n:Station) RETURN n ORDER BY n.english") List<Station> findAllStations();
+
+  @Query("match (s:Station)-[r:next]-(:Station) return distinct s.id+s.name+collect(r.line) as lines")
+  List<String> findLinesByStationId(@Param(value = "stationId") long stationId);
 
   @Query(
       "MATCH p=(start:Station{name:$stationName})-[r:next{line:$lineName}]->(end:Station) RETURN r.start")
@@ -45,5 +50,8 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
 
   @Query("MATCH (n:Station) WHERE NOT (n)--() DELETE n")
   List<String> deleteAllIsolatedStations();
+
+  @Query("match (s:Station)-[r:next]-(:Station) return s.name+collect(r.line)+s.id as lines order by size(lines) DESC LIMIT 15")
+  List<Value> findStationsWithMostLines();
 
 }

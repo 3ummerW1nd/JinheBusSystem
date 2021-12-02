@@ -1,23 +1,18 @@
 package com.example.jinhecitybussystem.service.serviceImpl;
 
-import com.example.jinhecitybussystem.entity.DTO.LinesDTO;
 import com.example.jinhecitybussystem.entity.DTO.NewLineDTO;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
-import com.example.jinhecitybussystem.entity.jsonEntity.Route;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
-import com.example.jinhecitybussystem.entity.jsonEntity.TimeTable;
 import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
 import com.example.jinhecitybussystem.service.LineService;
-import com.example.jinhecitybussystem.service.RouteService;
-import com.example.jinhecitybussystem.util.TimeUtil;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.neo4j.driver.Record;
-import org.neo4j.driver.Result;
-import org.neo4j.driver.internal.value.ListValue;
+
+import org.neo4j.driver.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 @Service
@@ -50,6 +45,16 @@ public class LineServiceImpl implements LineService {
     return answer;
   }
 
+  @Override
+  public List<Object> newFindLinesByStationName(String stationName) {
+    List<Value> lineList = lineRepository.newFindLinesByStationName(stationName);
+    List<Object> answer = new ArrayList<>();
+    for (Value line : lineList) {
+      List<Object> list = line.asList();
+      answer.add(list);
+    }
+    return answer;
+  }
 
   @Override
   public List<Integer> findDifferentLinesCount() {
@@ -98,8 +103,4 @@ public class LineServiceImpl implements LineService {
     stationRepository.deleteAllIsolatedStations();
   }
 
-  @Override
-  public List<String> neoFindLinesByStationName(String stationName) {
-    return lineRepository.findLinesByStationName(stationName);
-  }
 }

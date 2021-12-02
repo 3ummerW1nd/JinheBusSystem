@@ -7,6 +7,8 @@ import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
 import com.example.jinhecitybussystem.service.StationService;
 import java.util.*;
+
+import org.neo4j.driver.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,16 +54,12 @@ public class StationServiceImpl implements StationService {
   }
 
   @Override
-  public List<Map.Entry<Station, List<String>>> findStationsWithMostLines() {
-    List<Map.Entry<Station, List<String>>> answer = new ArrayList<>();
-    List<Map.Entry<Station, List<String>>> list = new ArrayList<>();
-    List<Station> allStations = findAllStations();
-    for (Station station : allStations) {
-      list.add(Map.entry(station, lineRepository.findLinesByStationId(station.getId())));
-    }
-    list.sort(Comparator.comparingInt(a -> a.getValue().size()));
-    for (int i = list.size() - 1; i >= list.size() - 16; i--) {
-      answer.add(list.get(i));
+  public List<Object> findStationsWithMostLines() {
+    List<Value> lineList = stationRepository.findStationsWithMostLines();
+    List<Object> answer = new ArrayList<>();
+    for (Value line : lineList) {
+      List<Object> list = line.asList();
+      answer.add(list);
     }
     return answer;
   }

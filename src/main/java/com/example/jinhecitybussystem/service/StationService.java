@@ -11,7 +11,7 @@ public interface StationService {
   List<List<Station>> findStationsByLine(Line line);
   List<Station> findStationsByRoute(String route);
   List<Station> findAllStations();
-  List<Map.Entry<Station, List<String>>> findStationsWithMostLines();
+  List<Object> findStationsWithMostLines();
   List<String> findSubwayStations();
   List<String> findDepartureStations();
   List<String> findTerminalStations();

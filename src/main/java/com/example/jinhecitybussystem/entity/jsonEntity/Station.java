@@ -10,7 +10,7 @@ import org.springframework.data.neo4j.core.schema.Property;
 @NodeEntity
 @Data
 public class Station {
-  @Id @Property(name = "id") private long id;
+  @Id @Property(name = "id") private Long id;
   @Property(name = "name") private String name;
   @Property(name = "english") private String english;
 }

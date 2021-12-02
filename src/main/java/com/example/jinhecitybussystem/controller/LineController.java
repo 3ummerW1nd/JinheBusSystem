@@ -8,6 +8,7 @@ import io.swagger.annotations.Api;
 import java.util.List;
 import java.util.Map;
 
+import org.neo4j.driver.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -35,10 +36,10 @@ public class LineController {
   }
 
   @ResponseBody
-  @GetMapping("/line/getLinesByStationNameNew")
-  public  List<String> getLinesByStationNameNew(
+  @GetMapping("/line/newGetLinesByStationName")
+  public List<Object> newGetLinesByStationName(
           @RequestParam("stationName") String stationName) {
-    return lineService.neoFindLinesByStationName(stationName);
+    return lineService.newFindLinesByStationName(stationName);
   }
 
   @ResponseBody

@@ -113,7 +113,7 @@ class JinheCityBusSystemApplicationTests {
 
   @Test
   void getMostTransferRoutes() {
-    System.out.println(lineService.neoFindLinesByStationName("锦城广场"));
+    System.out.println(lineService.newFindLinesByStationName("锦城广场"));
   }
 
   @Test
