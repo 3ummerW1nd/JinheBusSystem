@@ -1,9 +1,8 @@
 spring:
   data:
     neo4j:
-      database: jinhebus
-  neo4j:
-    uri: neo4j://localhost:7687
-    authentication:
+      database: neo4j
       username: neo4j
-      password: neo4jpasswd
+      password: 123456
+      uri: neo4j://localhost:7687
+

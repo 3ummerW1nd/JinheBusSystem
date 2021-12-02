@@ -103,4 +103,80 @@ public class LineServiceImpl implements LineService {
     stationRepository.deleteAllIsolatedStations();
   }
 
+  //需求8
+  @Override
+  public Map<String, Integer> lineDocked(String now, Integer stationID, int time) {
+    Map<String,Integer> map=new HashMap<>();
+    Integer next_hour,next_minute;
+    List<List<Object>> nexts=lineRepository.findEndById(stationID);
+    String[] split = now.split(":");
+    Integer now_hour=Integer.valueOf(split[0]);
+    Integer now_minute=Integer.valueOf(split[1]);
+    if(now_minute+time<60)
+    {
+      next_hour=now_hour;
+      next_minute=now_minute+time;
+    }
+    else
+    {
+      next_minute=now_minute+time-60;
+      next_hour=(now_hour+1)%24;
+    }
+//    System.out.println("now_hour: "+now_hour+"   now_minute: "+now_minute);
+//    System.out.println("next_hour: "+next_hour+"   next_minute: "+next_minute);
+//    System.out.println("==========================");
+    for(Object next:nexts)
+    {
+      String endList_tmp =next.toString();
+      String regex= String.valueOf(endList_tmp.charAt(2));
+      String newList=endList_tmp.replace(regex,"").replace("[","").replace("]","").replace(" ","");
+//      System.out.println(newList);
+      String[] endList = newList.split(",");
+      for (int i=1;i<endList.length;i++) {
+        String s=endList[i];
+        String[] split1 = s.split(":");
+        Integer hour= Integer.parseInt(split1[0]);
+        Integer minute=Integer.parseInt(split1[1]);
+//        System.out.println("hour: "+hour+"   minute: "+minute);
+        if(next_hour==0 && now_hour==23)
+        {
+          if(hour==23)
+          {
+            if(minute>=now_minute) map.put(endList[0],minute-now_minute);
+          }
+          if(hour==0)
+          {
+            if(minute<=next_minute) map.put(endList[0],minute-now_minute);
+          }
+        }
+        else
+        {
+          if(hour==now_hour && minute>=now_minute)
+          {
+            if(hour==next_hour && minute<=next_minute)
+            {
+              map.put(endList[0],minute-now_minute);
+            }
+            if(hour<next_hour)
+            {
+              map.put(endList[0],minute-now_minute);
+            }
+          }
+          if(hour>now_hour)
+          {
+            if(hour==next_hour && minute<=next_minute)
+            {
+              map.put(endList[0],minute-now_minute+60*(hour-now_hour));
+            }
+            if(hour<next_hour)
+            {
+              map.put(endList[0],minute-now_minute+60*(hour-now_hour));
+            }
+          }
+        }
+      }
+    }
+    return map;
+  }
+
 }

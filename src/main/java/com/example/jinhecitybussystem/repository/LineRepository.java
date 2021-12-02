@@ -39,4 +39,8 @@ public interface LineRepository extends Neo4jRepository<Line, Long> {
   @Query("match (s:Station{id:$stationId})-[r:next]-(:Station) return distinct r.line as lines")
   List<String> findLinesByStationId(@Param(value = "stationId") long stationId);
 
+  //需求8，查询到达给定站台的所有路线
+  @Query("match p=(s1:Station)-[r:next]->(s2:Station) where s2.id=$id return r.line+r.end")
+  List<List<Object>>  findEndById(@Param("id") Integer id);
+
 }

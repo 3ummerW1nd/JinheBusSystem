@@ -19,4 +19,6 @@ public interface LineService {
   List<Integer> findDifferentLinesCount();
   void addNewLine(NewLineDTO newLineDTO);
   void deleteLine(Line line);
+
+  Map<String,Integer> lineDocked(String now,Integer stationID, int time);
 }

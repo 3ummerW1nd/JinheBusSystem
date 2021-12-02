@@ -60,4 +60,14 @@ public class LineController {
     lineService.addNewLine(newLineDTO);
   }
 
+  //需求8
+  @ResponseBody
+  @GetMapping("/line/getLineDocked")
+  public Map<String,Integer> getLineDocked(@RequestParam("now") String now,
+                                           @RequestParam("stationID") Integer stationID,
+                                           @RequestParam("time") int time)
+  {
+    return lineService.lineDocked(now,stationID,time);
+  }
+
 }
