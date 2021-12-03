@@ -71,4 +71,13 @@ public class LineController {
     return lineService.lineDocked(now,stationID,time);
   }
 
+  //需求9
+  @ResponseBody
+  @GetMapping("/line/getShiftsDocked")
+  public Map<String,Integer> getShiftsDocked(@RequestParam("now") String now,
+                                           @RequestParam("stationID") Integer stationID)
+  {
+    return lineService.shiftsDocked(now, stationID);
+  }
+
 }

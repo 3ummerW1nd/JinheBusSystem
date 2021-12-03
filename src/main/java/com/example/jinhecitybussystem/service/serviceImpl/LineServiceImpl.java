@@ -117,76 +117,130 @@ public class LineServiceImpl implements LineService {
   //需求8
   @Override
   public Map<String, Integer> lineDocked(String now, Integer stationID, int time) {
-    Map<String,Integer> map=new HashMap<>();
-    Integer next_hour,next_minute;
-    List<List<Object>> nexts=lineRepository.findEndById(stationID);
+    Map<String, Integer> map = new HashMap<>();
+    Integer next_hour, next_minute;
+    List<List<Object>> nexts = lineRepository.findEndById(stationID);
     String[] split = now.split(":");
-    Integer now_hour=Integer.valueOf(split[0]);
-    Integer now_minute=Integer.valueOf(split[1]);
-    if(now_minute+time<60)
+    Integer now_hour = Integer.valueOf(split[0]);
+    Integer now_minute = Integer.valueOf(split[1]);
+    if(now_minute + time < 60)
     {
-      next_hour=now_hour;
-      next_minute=now_minute+time;
+      next_hour = now_hour;
+      next_minute = now_minute + time;
     }
     else
     {
-      next_minute=now_minute+time-60;
-      next_hour=(now_hour+1)%24;
+      next_minute = now_minute + time - 60;
+      next_hour = (now_hour + 1) % 24;
     }
 //    System.out.println("now_hour: "+now_hour+"   now_minute: "+now_minute);
 //    System.out.println("next_hour: "+next_hour+"   next_minute: "+next_minute);
 //    System.out.println("==========================");
-    for(Object next:nexts)
+    for(Object next : nexts)
     {
-      String endList_tmp =next.toString();
-      String regex= String.valueOf(endList_tmp.charAt(2));
-      String newList=endList_tmp.replace(regex,"").replace("[","").replace("]","").replace(" ","");
-//      System.out.println(newList);
+      String endList_tmp = next.toString();
+      String regex = String.valueOf(endList_tmp.charAt(2));
+      System.out.println(endList_tmp);
+      String newList = endList_tmp.replace(regex,"").replace("[","").replace("]","").replace(" ","");
+      System.out.println(newList);
       String[] endList = newList.split(",");
-      for (int i=1;i<endList.length;i++) {
-        String s=endList[i];
+      for (int i = 1; i < endList.length; i++) {
+        String s = endList[i];
         String[] split1 = s.split(":");
-        Integer hour= Integer.parseInt(split1[0]);
-        Integer minute=Integer.parseInt(split1[1]);
+        Integer hour = Integer.parseInt(split1[0]);
+        Integer minute = Integer.parseInt(split1[1]);
 //        System.out.println("hour: "+hour+"   minute: "+minute);
-        if(next_hour==0 && now_hour==23)
+        if(next_hour == 0 && now_hour == 23)
         {
-          if(hour==23)
+          if(hour == 23)
           {
-            if(minute>=now_minute) map.put(endList[0],minute-now_minute);
+            if(minute >= now_minute) map.put(endList[0], minute  -now_minute);
           }
-          if(hour==0)
+          if(hour == 0)
           {
-            if(minute<=next_minute) map.put(endList[0],minute-now_minute);
+            if(minute <= next_minute) map.put(endList[0], minute - now_minute);
           }
         }
         else
         {
-          if(hour==now_hour && minute>=now_minute)
+          if(hour == now_hour && minute >= now_minute)
           {
-            if(hour==next_hour && minute<=next_minute)
+            if(hour == next_hour && minute <= next_minute)
             {
-              map.put(endList[0],minute-now_minute);
+              map.put(endList[0], minute - now_minute);
             }
-            if(hour<next_hour)
+            if(hour < next_hour)
             {
-              map.put(endList[0],minute-now_minute);
+              map.put(endList[0], minute - now_minute);
             }
           }
-          if(hour>now_hour)
+          if(hour > now_hour)
           {
-            if(hour==next_hour && minute<=next_minute)
+            if(hour == next_hour && minute <= next_minute)
             {
-              map.put(endList[0],minute-now_minute+60*(hour-now_hour));
+              map.put(endList[0], minute - now_minute + 60 * (hour - now_hour));
             }
-            if(hour<next_hour)
+            if(hour < next_hour)
             {
-              map.put(endList[0],minute-now_minute+60*(hour-now_hour));
+              map.put(endList[0], minute - now_minute + 60 * (hour - now_hour));
             }
           }
         }
       }
     }
+    return map;
+  }
+
+  //需求9
+  @Override
+  public Map<String, Integer> shiftsDocked(String now, Integer stationID) {
+    Map<String, Integer> map = new HashMap<>();
+    Integer next_hour, next_minute;
+    List<List<Object>> nexts = lineRepository.findEndById(stationID);
+    String[] split = now.split(":");
+    Integer now_hour = Integer.valueOf(split[0]);
+    Integer now_minute = Integer.valueOf(split[1]);
+//    System.out.println("now_hour: "+now_hour+"   now_minute: "+now_minute);
+//    System.out.println("next_hour: "+next_hour+"   next_minute: "+next_minute);
+//    System.out.println("==========================");
+    for(Object next : nexts)
+    {
+      String endList_tmp = next.toString();
+      String regex = String.valueOf(endList_tmp.charAt(2));
+//      System.out.println(endList_tmp);
+      String newList=endList_tmp.replace(regex,"").replace("[","").replace("]","").replace(" ","");
+//      System.out.println(newList);
+      String[] endList = newList.split(",");
+      int j = 1;
+
+      for (int i = 1; i < endList.length; i++) {
+        String s = endList[i];
+        String[] split1 = s.split(":");
+        Integer hour = Integer.parseInt(split1[0]);
+        Integer minute = Integer.parseInt(split1[1]);
+//        System.out.println("hour: "+hour+"   minute: "+minute);
+
+        if ((hour > now_hour) && j < 4) {
+          map.put(endList[0] + "班次" + String.valueOf(j), minute - now_minute + 60 * (hour - now_hour));
+          j++;
+        }
+        else if ((hour == now_hour && minute >= now_minute) && j < 4) {
+          map.put(endList[0] + "班次" + String.valueOf(j), minute - now_minute);
+          j++;
+        }
+        else if ((hour < now_hour) && j != 1 && j < 4) {
+          map.put(endList[0] + "班次" + String.valueOf(j), (24 - now_hour + hour) * 60 + minute - now_minute);
+          j++;
+        }
+      }
+    }
+//    List<Map.Entry<String, Integer>> answer = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
+//    answer.sort(new Comparator<Map.Entry<String, Integer>>() {
+//      @Override
+//      public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
+//        return o1.getKey().compareTo(o2.getKey());
+//      }
+//    });
     return map;
   }
 
