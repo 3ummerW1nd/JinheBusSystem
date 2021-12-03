@@ -1,16 +1,14 @@
 package com.example.jinhecitybussystem.service.serviceImpl;
 
 import com.example.jinhecitybussystem.entity.DTO.NewLineDTO;
+import com.example.jinhecitybussystem.entity.DTO.StationRoutes;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
 import com.example.jinhecitybussystem.service.LineService;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.neo4j.driver.Value;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,12 +44,25 @@ public class LineServiceImpl implements LineService {
   }
 
   @Override
-  public List<Object> newFindLinesByStationName(String stationName) {
+  public List<StationRoutes> newFindLinesByStationName(String stationName) {
     List<Value> lineList = lineRepository.newFindLinesByStationName(stationName);
-    List<Object> answer = new ArrayList<>();
+    List<Object> allLineList = new ArrayList<>();
+    List<StationRoutes> answer = new ArrayList<>();
     for (Value line : lineList) {
       List<Object> list = line.asList();
-      answer.add(list);
+      allLineList.add(list);
+    }
+    for(Object obj : allLineList) {
+      Collection<?> collection = (Collection<?>) obj;
+      StationRoutes temp = new StationRoutes();
+      for(Object o : collection) {
+        if(o instanceof Long) {
+          temp.setId((Long) o);
+        } else {
+          temp.getLines().add((String) o);
+        }
+      }
+      answer.add(temp);
     }
     return answer;
   }

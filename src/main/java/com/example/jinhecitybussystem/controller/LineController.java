@@ -1,6 +1,7 @@
 package com.example.jinhecitybussystem.controller;
 
 import com.example.jinhecitybussystem.entity.DTO.NewLineDTO;
+import com.example.jinhecitybussystem.entity.DTO.StationRoutes;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.service.LineService;
@@ -37,7 +38,7 @@ public class LineController {
 
   @ResponseBody
   @GetMapping("/line/newGetLinesByStationName")
-  public List<Object> newGetLinesByStationName(
+  public List<StationRoutes> newGetLinesByStationName(
           @RequestParam("stationName") String stationName) {
     return lineService.newFindLinesByStationName(stationName);
   }

@@ -1,6 +1,7 @@
 package com.example.jinhecitybussystem.service;
 
 import com.example.jinhecitybussystem.entity.DTO.StationPairDTO;
+import com.example.jinhecitybussystem.entity.DTO.StationRoutes;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import java.util.List;
@@ -11,7 +12,7 @@ public interface StationService {
   List<List<Station>> findStationsByLine(Line line);
   List<Station> findStationsByRoute(String route);
   List<Station> findAllStations();
-  List<Object> findStationsWithMostLines();
+  List<StationRoutes> findStationsWithMostLines();
   List<String> findSubwayStations();
   List<String> findDepartureStations();
   List<String> findTerminalStations();

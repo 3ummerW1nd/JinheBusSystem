@@ -1,12 +1,15 @@
 package com.example.jinhecitybussystem.service.serviceImpl;
 
 import com.example.jinhecitybussystem.entity.DTO.StationPairDTO;
+import com.example.jinhecitybussystem.entity.DTO.StationRoutes;
 import com.example.jinhecitybussystem.entity.jsonEntity.Line;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.repository.LineRepository;
 import com.example.jinhecitybussystem.repository.StationRepository;
 import com.example.jinhecitybussystem.service.StationService;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.neo4j.driver.Value;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,12 +57,30 @@ public class StationServiceImpl implements StationService {
   }
 
   @Override
-  public List<Object> findStationsWithMostLines() {
+  public List<StationRoutes> findStationsWithMostLines() {
     List<Value> lineList = stationRepository.findStationsWithMostLines();
-    List<Object> answer = new ArrayList<>();
+    List<Object> allLineList = new ArrayList<>();
+    List<StationRoutes> answer = new ArrayList<>();
     for (Value line : lineList) {
       List<Object> list = line.asList();
-      answer.add(list);
+      allLineList.add(list);
+    }
+    for (Object obj : allLineList) {
+      Collection<?> collection = (Collection<?>) obj;
+      StationRoutes temp = new StationRoutes();
+      for (Object o : collection) {
+        if (o instanceof Long) {
+          temp.setId((Long) o);
+        } else {
+          String judge = (String) o;
+          if (judge.endsWith("路") || judge.endsWith("路上行") || judge.endsWith("路下行")) {
+            temp.getLines().add(judge);
+          } else {
+            temp.setName(judge);
+          }
+        }
+      }
+      answer.add(temp);
     }
     return answer;
   }

@@ -1,5 +1,6 @@
 package com.example.jinhecitybussystem.controller;
 
+import com.example.jinhecitybussystem.entity.DTO.StationRoutes;
 import com.example.jinhecitybussystem.entity.jsonEntity.Station;
 import com.example.jinhecitybussystem.service.StationService;
 import java.util.List;
@@ -26,7 +27,7 @@ public class StationController {
 
   @ResponseBody
   @GetMapping("/station/getStationsWithMostLines")
-  public List<Object> getStationsWithMostLines() {
+  public List<StationRoutes> getStationsWithMostLines() {
     return stationService.findStationsWithMostLines();
   }
 
