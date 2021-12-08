@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>静态界面</title>
+    <link rel="stylesheet" href="./bootvue/css/bootstrap.min.css">
+</head>
+<body>
+<script src="./bootvue/js/vue@2.js"></script>
+<script src="bootvue/js/axios.min.js"></script>
+<form class="navbar-form navbar-left" role="search">
+    <div class="form-group">
+        <input type="text" class="form-control" placeholder="请输入线路序号，例如N95">
+    </div>
+    <button type="submit" class="btn btn-default">查询</button>
+</form>
+<table class="table table-bordered">
+    <tr>
+        <td class="active">是否有向</td>
+        <td class="active">班次间隔（分钟）</td>
+        <td class="active">单向里程（公里）</td>
+        <td class="active">线路名</td>
+        <td class="active">运行时长</td>
+        <td class="active">线路走向</td>
+        <td class="active">运营时间</td>
+        <td class="active">线路类型</td>
+    <tr>
+        <td >是</td>
+        <td >8分钟</td>
+        <td >12公里</td>
+        <td >30</td>
+        <td >约49分钟</td>
+        <td >燎原-北路湾公交站</td>
+        <td >6:30-22:30</td>
+        <td >干线</td>
+    </tr>
+</table>
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-0">
+            <form class="navbar-form navbar-left" role="search">
+                <div class="form-group">
+                    <input style="width:230px" type="text" class="form-control" placeholder="请输入线路名称，例如2路上行">
+                </div>
+                <button type="submit" class="btn btn-default">查询</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <table class="table table-bordered ">
+                <tr>
+                    <td class="active">序号</td>
+                    <td class="active">id</td>
+                    <td class="active">站点名称</td>
+                    <td class="active">英文名称</td>
+                <tr>
+                    <td >1</td>
+                    <td >7542</td>
+                    <td >兴义镇（始发站）</td>
+                    <td >XingYiZhen</td>
+                </tr>
+                <tr>
+                    <td >2</td>
+                    <td >7527</td>
+                    <td >永盛（始发站）</td>
+                    <td >YongSheng</td>
+                </tr>
+                <tr>
+                    <td >3</td>
+                    <td >7504</td>
+                    <td >南华大道</td>
+                    <td >NanHuaDaDao</td>
+                </tr>
+                <tr>
+                    <td >4</td>
+                    <td >7485</td>
+                    <td >南华大道南</td>
+                    <td >NanHuaDaDao S</td>
+                </tr>
+                <tr>
+                    <td >5</td>
+                    <td >21460</td>
+                    <td >金河客运站</td>
+                    <td >JinHeKeYun</td>
+                </tr>
+                <tr>
+                    <td >6</td>
+                    <td >803</td>
+                    <td >金河公园</td>
+                    <td >JinHePark</td>
+                </tr>
+                <tr>
+                    <td >7</td>
+                    <td >98730</td>
+                    <td >平桥</td>
+                    <td >Peace Bridge</td>
+                </tr>
+                <tr>
+                    <td >8</td>
+                    <td >14214</td>
+                    <td >食品城</td>
+                    <td >Food City</td>
+                </tr>
+                <tr>
+                    <td >9</td>
+                    <td >761</td>
+                    <td >生态公园</td>
+                    <td >Ecologic Park</td>
+                </tr>
+                <tr>
+                    <td >10</td>
+                    <td >750</td>
+                    <td >画展中心</td>
+                    <td >Art Center</td>
+                </tr>
+                <tr>
+                    <td >11</td>
+                    <td >744</td>
+                    <td >航天立交东</td>
+                    <td >Hangtianlijiao E</td>
+                </tr>
+                <tr>
+                    <td >12</td>
+                    <td >5155</td>
+                    <td >航天立交南</td>
+                    <td >Hangtianlijiao S</td>
+                </tr>
+                <tr>
+                    <td >13</td>
+                    <td >5142</td>
+                    <td >玩具城</td>
+                    <td >Toyshop</td>
+                </tr>
+                <tr>
+                    <td >14</td>
+                    <td >28139</td>
+                    <td >新山农贸市场</td>
+                    <td >XinShan Market</td>
+                </tr>
+                <tr>
+                    <td >15</td>
+                    <td >28843</td>
+                    <td >果丰</td>
+                    <td >Guo Feng</td>
+                </tr>
+                <tr>
+                    <td >16</td>
+                    <td >28845</td>
+                    <td >凤凰路口</td>
+                    <td >Phoenix Kou</td>
+                </tr>
+                <tr>
+                    <td >17</td>
+                    <td >2128</td>
+                    <td >杨柳河南</td>
+                    <td >Willow River S</td>
+                </tr>
+                <tr>
+                    <td >18</td>
+                    <td >97825</td>
+                    <td >杨柳河北</td>
+                    <td >Willow River N</td>
+                </tr>
+                <tr>
+                    <td >19</td>
+                    <td >14417</td>
+                    <td >双桥子立交北</td>
+                    <td >Shuangqiaozi N</td>
+                </tr>
+                <tr>
+                    <td >20</td>
+                    <td >14423</td>
+                    <td >学府路</td>
+                    <td >Xuefulu</td>
+                </tr>
+                <tr>
+                    <td >21</td>
+                    <td >97836</td>
+                    <td >地铁东井巷</td>
+                    <td >Dongjinxiang</td>
+                </tr>
+                <tr>
+                    <td >22</td>
+                    <td >16772</td>
+                    <td >金飞路一段</td>
+                    <td >JinFeilu One</td>
+                </tr>
+                <tr>
+                    <td >23</td>
+                    <td >2800</td>
+                    <td >蓝天立交北</td>
+                    <td >LanTianLiJiao N</td>
+                </tr>
+                <tr>
+                    <td >24</td>
+                    <td >6855</td>
+                    <td >蓝天立交南</td>
+                    <td >LanTianLiJiao S</td>
+                </tr>
+                <tr>
+                    <td >25</td>
+                    <td >6901</td>
+                    <td >百花路东</td>
+                    <td >Bai Hua Lu E</td>
+                </tr>
+                <tr>
+                    <td >26</td>
+                    <td >6854</td>
+                    <td >百花路西</td>
+                    <td >Bai Hua Lu W</td>
+                </tr>
+                <tr>
+                    <td >27</td>
+                    <td >6818</td>
+                    <td >商贸城</td>
+                    <td >Trace City</td>
+                </tr>
+                <tr>
+                    <td >28</td>
+                    <td >14495</td>
+                    <td >火车西站公交站（终点站）</td>
+                    <td >Huo Che Zhan</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

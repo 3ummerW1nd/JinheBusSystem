@@ -130,14 +130,14 @@ public class StationServiceImpl implements StationService {
   }
 
   @Override
-  public Set<String> findSameStationsByRouteNames(String routeName1, String routeName2) {
+  public Set<Station> findSameStationsByRouteNames(String routeName1, String routeName2) {
     List<Station> routeStations1 = stationRepository.findRouteStationsByLineName(routeName1);
     List<Station> routeStations2 = stationRepository.findRouteStationsByLineName(routeName2);
-    Set<String> answer = new HashSet<>();
+    Set<Station> answer = new HashSet<>();
     for (Station s1 : routeStations1) {
       for (Station s2 : routeStations2) {
         if (s1.getName().equals(s2.getName())) {
-          answer.add(s1.getName());
+          answer.add(s1);
         }
       }
     }

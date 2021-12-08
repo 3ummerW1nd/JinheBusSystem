@@ -57,7 +57,7 @@ public class StationController {
 
   @ResponseBody
   @GetMapping("/station/getSameStations")
-  public Set<String> getSameStation(
+  public Set<Station> getSameStation(
       @RequestParam("routeName1") String routeName1, @RequestParam("routeName2") String routeName2) {
     return stationService.findSameStationsByRouteNames(routeName1, routeName2);
   }

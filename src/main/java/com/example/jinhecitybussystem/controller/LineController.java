@@ -64,7 +64,7 @@ public class LineController {
   //需求8
   @ResponseBody
   @GetMapping("/line/getLineDocked")
-  public Map<String,Integer> getLineDocked(@RequestParam("now") String now,
+  public Map<String,List<Integer>> getLineDocked(@RequestParam("now") String now,
                                            @RequestParam("stationID") Integer stationID,
                                            @RequestParam("time") int time)
   {

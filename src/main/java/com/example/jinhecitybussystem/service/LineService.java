@@ -21,7 +21,7 @@ public interface LineService {
   void addNewLine(NewLineDTO newLineDTO);
   void deleteLine(Line line);
 
-  Map<String, Integer> lineDocked(String now, Integer stationID, int time);
+  Map<String, List<Integer>> lineDocked(String now, Integer stationID, int time);
 
   Map<String, Integer> shiftsDocked(String now, Integer stationID);
 }

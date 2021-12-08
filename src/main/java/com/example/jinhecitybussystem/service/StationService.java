@@ -17,6 +17,6 @@ public interface StationService {
   List<String> findDepartureStations();
   List<String> findTerminalStations();
   List<String> findSingleStations(String lineName);
-  Set<String> findSameStationsByRouteNames(String lineName1, String lineName2);
+  Set<Station> findSameStationsByRouteNames(String lineName1, String lineName2);
   List<StationPairDTO> findMostRouteStationPairs();
 }

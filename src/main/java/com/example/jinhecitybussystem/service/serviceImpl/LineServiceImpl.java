@@ -114,10 +114,24 @@ public class LineServiceImpl implements LineService {
     stationRepository.deleteAllIsolatedStations();
   }
 
+  public void updateMap(Map<String,List<Integer>> map,String index,Integer update)
+  {
+    if(map.get(index)==null)
+    {
+      List<Integer> list=new ArrayList<>();
+      list.add(update);
+      map.put(index,list);
+    }
+    else
+    {
+      map.get(index).add(update);
+    }
+  }
+
   //需求8
   @Override
-  public Map<String, Integer> lineDocked(String now, Integer stationID, int time) {
-    Map<String, Integer> map = new HashMap<>();
+  public Map<String, List<Integer>> lineDocked(String now, Integer stationID, int time) {
+    Map<String, List<Integer>> map = new HashMap<>();
     Integer next_hour, next_minute;
     List<List<Object>> nexts = lineRepository.findEndById(stationID);
     String[] split = now.split(":");
@@ -133,32 +147,28 @@ public class LineServiceImpl implements LineService {
       next_minute = now_minute + time - 60;
       next_hour = (now_hour + 1) % 24;
     }
-//    System.out.println("now_hour: "+now_hour+"   now_minute: "+now_minute);
-//    System.out.println("next_hour: "+next_hour+"   next_minute: "+next_minute);
-//    System.out.println("==========================");
     for(Object next : nexts)
     {
       String endList_tmp = next.toString();
       String regex = String.valueOf(endList_tmp.charAt(2));
-      System.out.println(endList_tmp);
+//      System.out.println(endList_tmp);
       String newList = endList_tmp.replace(regex,"").replace("[","").replace("]","").replace(" ","");
-      System.out.println(newList);
+//      System.out.println(newList);
       String[] endList = newList.split(",");
       for (int i = 1; i < endList.length; i++) {
         String s = endList[i];
         String[] split1 = s.split(":");
         Integer hour = Integer.parseInt(split1[0]);
         Integer minute = Integer.parseInt(split1[1]);
-//        System.out.println("hour: "+hour+"   minute: "+minute);
         if(next_hour == 0 && now_hour == 23)
         {
           if(hour == 23)
           {
-            if(minute >= now_minute) map.put(endList[0], minute  -now_minute);
+            if(minute >= now_minute) updateMap(map,endList[0],minute  -now_minute);
           }
           if(hour == 0)
           {
-            if(minute <= next_minute) map.put(endList[0], minute - now_minute);
+            if(minute <= next_minute) updateMap(map,endList[0],minute  -now_minute);
           }
         }
         else
@@ -167,22 +177,22 @@ public class LineServiceImpl implements LineService {
           {
             if(hour == next_hour && minute <= next_minute)
             {
-              map.put(endList[0], minute - now_minute);
+              updateMap(map,endList[0],minute  -now_minute);
             }
             if(hour < next_hour)
             {
-              map.put(endList[0], minute - now_minute);
+              updateMap(map,endList[0],minute  -now_minute);
             }
           }
           if(hour > now_hour)
           {
             if(hour == next_hour && minute <= next_minute)
             {
-              map.put(endList[0], minute - now_minute + 60 * (hour - now_hour));
+              updateMap(map,endList[0],minute - now_minute + 60 * (hour - now_hour));
             }
             if(hour < next_hour)
             {
-              map.put(endList[0], minute - now_minute + 60 * (hour - now_hour));
+              updateMap(map,endList[0],minute - now_minute + 60 * (hour - now_hour));
             }
           }
         }
@@ -200,16 +210,11 @@ public class LineServiceImpl implements LineService {
     String[] split = now.split(":");
     Integer now_hour = Integer.valueOf(split[0]);
     Integer now_minute = Integer.valueOf(split[1]);
-//    System.out.println("now_hour: "+now_hour+"   now_minute: "+now_minute);
-//    System.out.println("next_hour: "+next_hour+"   next_minute: "+next_minute);
-//    System.out.println("==========================");
     for(Object next : nexts)
     {
       String endList_tmp = next.toString();
       String regex = String.valueOf(endList_tmp.charAt(2));
-//      System.out.println(endList_tmp);
       String newList=endList_tmp.replace(regex,"").replace("[","").replace("]","").replace(" ","");
-//      System.out.println(newList);
       String[] endList = newList.split(",");
       int j = 1;
 
@@ -218,7 +223,6 @@ public class LineServiceImpl implements LineService {
         String[] split1 = s.split(":");
         Integer hour = Integer.parseInt(split1[0]);
         Integer minute = Integer.parseInt(split1[1]);
-//        System.out.println("hour: "+hour+"   minute: "+minute);
 
         if ((hour > now_hour) && j < 4) {
           map.put(endList[0] + "班次" + String.valueOf(j), minute - now_minute + 60 * (hour - now_hour));
@@ -234,13 +238,6 @@ public class LineServiceImpl implements LineService {
         }
       }
     }
-//    List<Map.Entry<String, Integer>> answer = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
-//    answer.sort(new Comparator<Map.Entry<String, Integer>>() {
-//      @Override
-//      public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-//        return o1.getKey().compareTo(o2.getKey());
-//      }
-//    });
     return map;
   }
 
