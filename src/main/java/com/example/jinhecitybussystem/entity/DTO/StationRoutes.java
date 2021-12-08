@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class StationRoutes {
+    private Integer routeNum;
     private Long id;
     private String name;
     private List<String> lines;

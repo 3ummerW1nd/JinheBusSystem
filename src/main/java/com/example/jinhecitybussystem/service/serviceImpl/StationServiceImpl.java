@@ -68,6 +68,7 @@ public class StationServiceImpl implements StationService {
     for (Object obj : allLineList) {
       Collection<?> collection = (Collection<?>) obj;
       StationRoutes temp = new StationRoutes();
+      temp.setRouteNum(collection.size()-2);
       for (Object o : collection) {
         if (o instanceof Long) {
           temp.setId((Long) o);

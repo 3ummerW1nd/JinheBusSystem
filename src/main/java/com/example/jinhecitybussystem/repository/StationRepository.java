@@ -51,7 +51,7 @@ public interface StationRepository extends Neo4jRepository<Station, Long> {
   @Query("MATCH (n:Station) WHERE NOT (n)--() DELETE n")
   List<String> deleteAllIsolatedStations();
 
-  @Query("match (s:Station)-[r:next]-(:Station) return s.name+collect(r.line)+s.id as lines order by size(lines) DESC LIMIT 15")
+  @Query("match (s:Station)-[r:next]-(:Station) return s.name+collect(distinct r.line)+s.id as lines order by size(lines) DESC LIMIT 15")
   List<Value> findStationsWithMostLines();
 
 }
